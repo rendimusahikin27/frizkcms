@@ -1,8 +1,30 @@
 <div class="frizk-topbar">
     <!-- Kiri: Logo & Breadcrumb -->
     <div class="topbar-brand">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        <span>FrizkCMS</span>
+        <!-- CUSTOM FRIZQCMS LOGO (SVG MURNI) -->
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <defs>
+                <!-- Gradasi Warna Persis Seperti Gambar Anda -->
+                <linearGradient id="frizkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#8B5CF6" />   <!-- Ungu -->
+                    <stop offset="50%" stop-color="#3B82F6" />  <!-- Biru -->
+                    <stop offset="100%" stop-color="#0EA5E9" /> <!-- Biru Muda/Cyan -->
+                </linearGradient>
+            </defs>
+            
+            <!-- Latar Belakang Kotak Melengkung (Squircle) -->
+            <rect width="100" height="100" rx="24" fill="url(#frizkGrad)" />
+            
+            <!-- Huruf 'F' -->
+            <rect x="30" y="24" width="16" height="52" rx="8" fill="#FFFFFF" /> <!-- Batang Vertikal -->
+            <rect x="30" y="24" width="40" height="16" rx="8" fill="#FFFFFF" /> <!-- Lengan Atas -->
+            <rect x="30" y="46" width="26" height="16" rx="8" fill="#FFFFFF" /> <!-- Lengan Tengah -->
+            
+            <!-- Titik Oranye -->
+            <circle cx="68" cy="68" r="10" fill="#F59E0B" />
+        </svg>
+
+        <span style="font-size: 1.125rem; margin-left: 0.25rem;">FrizkCMS</span>
         
         <% if (typeof path !== 'undefined' && path.startsWith('/admin')) { %>
             <span style="margin: 0 0.5rem; color: var(--border-color);">/</span>
