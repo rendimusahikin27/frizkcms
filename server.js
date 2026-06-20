@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const dotenv = require("dotenv");
+const { env } = require("process");
 
 dotenv.config();
 
@@ -51,7 +52,46 @@ app.get("/api/v1/posts", (req, res) => {
 });
 
 app.get("/install", (req, res) => {
-    res.send('<h1>FrizkCMS Installer</h1><p>Wizard instalasi Database akan di sini.</p>');
+    if (fs.existsSync(path.join(__dirname, ".env"))) {
+        return res.redirect("/admin");
+    }
+    res.render("install/index.ejs");
+});
+
+app.post('/install', (req, res) => {
+    // Proteksi: Jangan biarkan ditimpa jika .env sudah ada
+    if (fs.existsSync(path.join(__dirname, '.env'))) {
+        return res.status(403).send('CMS is already installed.');
+    }
+
+    // TANGKAP tablePrefix dari req.body
+    const { dbType, tablePrefix, dbHost, dbPort, dbName, dbUser, dbPass } = req.body;
+    
+    // Pastikan prefix memiliki nilai default jika kosong
+    const prefix = tablePrefix ? tablePrefix.trim() : 'frizk_';
+
+    let envContent = `NODE_ENV=production\nPORT=3000\nDB_TYPE=${dbType}\nDB_PREFIX=${prefix}\n`;
+
+    if (dbType === 'sqlite') {
+        envContent += `DB_SQLITE_PATH=./database/frizk.sqlite\n`;
+    } else {
+        const dialect = dbType === 'postgres' ? 'postgresql' : 'mysql';
+        const portStr = dbPort ? `:${dbPort}` : '';
+        envContent += `DATABASE_URL="${dialect}://${dbUser}:${dbPass}@${dbHost}${portStr}/${dbName}"\n`;
+    }
+
+    const sessionSecret = require('crypto').randomBytes(32).toString('hex');
+    envContent += `SESSION_SECRET="${sessionSecret}"\n`;
+
+    try {
+        fs.writeFileSync(path.join(__dirname, '.env'), envContent);
+        dotenv.config({ override: true });
+        triggerRestart();
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to write configuration file.');
+    }
 });
 
 app.get("*", (req, res) => {

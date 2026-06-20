@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install FrizkCMS</title>
+    <link rel="stylesheet" href="/public/admin/css/frizk-ui.css">
+</head>
+
+<body>
+
+    <div class="frizk-card">
+        <div class="frizk-header">
+            <h1>Welcome to FrizkCMS</h1>
+            <p>Let's setup your database connection.</p>
+        </div>
+
+        <form action="/install" method="POST">
+            <div class="form-group">
+                <label for="dbType">Database Driver</label>
+                <select id="dbType" name="dbType" required>
+                    <option value="sqlite">SQLite (Best for small sites & cPanel)</option>
+                    <option value="mysql">MySQL</option>
+                    <option value="postgres">PostgreSQL</option>
+                </select>
+            </div>
+
+            <!-- FITUR BARU: Table Prefix (Berlaku untuk semua DB) -->
+            <div class="form-group">
+                <label for="tablePrefix">Table Prefix</label>
+                <input type="text" id="tablePrefix" name="tablePrefix" value="frizk_" required>
+                <small style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">
+                    Example: frizk_ (Useful if multiple installations share one database)
+                </small>
+            </div>
+
+            <!-- Bagian ini akan disembunyikan jika SQLite dipilih -->
+            <div id="dbCredentials" class="hidden">
+                <div class="form-group">
+                    <label for="dbHost">Database Host</label>
+                    <input type="text" id="dbHost" name="dbHost" placeholder="127.0.0.1 or localhost">
+                </div>
+                <div class="form-group">
+                    <label for="dbPort">Database Port</label>
+                    <input type="text" id="dbPort" name="dbPort" placeholder="3306 for MySQL, 5432 for PG">
+                </div>
+                <div class="form-group">
+                    <label for="dbName">Database Name</label>
+                    <input type="text" id="dbName" name="dbName" placeholder="frizkcms_db">
+                </div>
+                <div class="form-group">
+                    <label for="dbUser">Database User</label>
+                    <input type="text" id="dbUser" name="dbUser" placeholder="root">
+                </div>
+                <div class="form-group">
+                    <label for="dbPass">Database Password</label>
+                    <input type="password" id="dbPass" name="dbPass" placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Install System</button>
+        </form>
+    </div>
+
+    <!-- Vanilla JS Interactivity -->
+    <script>
+        const dbTypeSelect = document.getElementById('dbType');
+        const dbCredentials = document.getElementById('dbCredentials');
+
+        function toggleCredentials() {
+            if (dbTypeSelect.value === 'sqlite') {
+                dbCredentials.classList.add('hidden');
+                // Remove required attribute when hidden
+                document.querySelectorAll('#dbCredentials input').forEach(input => input.removeAttribute('required'));
+            } else {
+                dbCredentials.classList.remove('hidden');
+                // Add required attribute when shown
+                document.querySelectorAll('#dbCredentials input').forEach(input => input.setAttribute('required', 'true'));
+            }
+        }
+
+        // Jalankan saat pertama dimuat
+        toggleCredentials();
+
+        // Jalankan saat pilihan diubah
+        dbTypeSelect.addEventListener('change', toggleCredentials);
+    </script>
+</body>
+
+</html>

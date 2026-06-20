@@ -1,0 +1,117 @@
+/* public/admin/css/frizk-ui.css */
+:root {
+    --bg-color: #FAFAFA;
+    --surface-color: #FFFFFF;
+    --text-main: #111827;
+    --text-muted: #6B7280;
+    --border-color: #E5E7EB;
+    --accent-color: #000000; /* Vercel/Linear style black accent */
+    --accent-hover: #374151;
+    --radius: 8px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Card Container */
+.frizk-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-sm);
+}
+
+.frizk-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.frizk-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.frizk-header p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background-color: var(--surface-color);
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: var(--text-main);
+    box-shadow: 0 0 0 1px var(--text-main);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Utility to hide elements smoothly */
+.hidden {
+    display: none !important;
+}
