@@ -4,6 +4,10 @@ const fs = require("fs");
 const dotenv = require("dotenv");
 const { env } = require("process");
 const { initDB } = require("./database/index");
+const bcrypt = require("bcryptjs");
+const { runCoreMigrations } = require("./database/migrate");
+const { users } = require("./database/schema/users");
+const { getDB } = require("./database/index");
 
 dotenv.config();
 
@@ -59,18 +63,17 @@ app.get("/install", (req, res) => {
     res.render("install/index.ejs");
 });
 
-app.post('/install', (req, res) => {
-    // Proteksi: Jangan biarkan ditimpa jika .env sudah ada
+app.post('/install', async (req, res) => {
     if (fs.existsSync(path.join(__dirname, '.env'))) {
         return res.status(403).send('CMS is already installed.');
     }
 
-    // TANGKAP tablePrefix dari req.body
-    const { dbType, tablePrefix, dbHost, dbPort, dbName, dbUser, dbPass } = req.body;
+    const { 
+        dbType, tablePrefix, dbHost, dbPort, dbName, dbUser, dbPass,
+        adminUser, adminEmail, adminPass 
+    } = req.body;
     
-    // Pastikan prefix memiliki nilai default jika kosong
     const prefix = tablePrefix ? tablePrefix.trim() : 'frizk_';
-
     let envContent = `NODE_ENV=production\nPORT=3000\nDB_TYPE=${dbType}\nDB_PREFIX=${prefix}\n`;
 
     if (dbType === 'sqlite') {
@@ -85,13 +88,44 @@ app.post('/install', (req, res) => {
     envContent += `SESSION_SECRET="${sessionSecret}"\n`;
 
     try {
+        // 1. Tulis file .env sementara
         fs.writeFileSync(path.join(__dirname, '.env'), envContent);
+        
+        // 2. Load env baru ke dalam process Node.js yang sedang berjalan
         dotenv.config({ override: true });
+
+        // 3. Connect ke Database secara dinamis
+        const db = await initDB();
+
+        // 4. Jalankan Migrasi (Buat Tabel)
+        await runCoreMigrations(dbType, prefix);
+
+        // 5. Buat Akun Admin Pertama
+        const hashedPassword = await bcrypt.hash(adminPass, 10);
+        
+        // Kita menggunakan Drizzle ORM Insert untuk memasukkan data!
+        await db.insert(users).values({
+            username: adminUser,
+            email: adminEmail,
+            password: hashedPassword,
+            role: 'admin'
+        });
+
+        console.log("👤 Admin user created successfully.");
+
+        // 6. Trigger Restart untuk sistem production (cPanel)
         triggerRestart();
-        res.redirect('/admin');
+
+        // 7. Selesai! Arahkan ke halaman login admin (Akan kita buat nanti)
+        res.send('<h1>Installation Complete!</h1><p>Welcome to FrizkCMS. <a href="/admin">Go to Admin Panel</a></p>');
+        
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Failed to write configuration file.');
+        console.error("Installation Error:", error);
+        // Jika gagal, hapus .env agar user bisa mencoba lagi
+        if (fs.existsSync(path.join(__dirname, '.env'))) {
+            fs.unlinkSync(path.join(__dirname, '.env'));
+        }
+        res.status(500).send(`Installation Failed: ${error.message}. <a href="/install">Try Again</a>`);
     }
 });
 
