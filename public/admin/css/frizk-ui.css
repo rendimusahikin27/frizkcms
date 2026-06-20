@@ -115,3 +115,130 @@ input:focus, select:focus {
 .hidden {
     display: none !important;
 }
+
+.frizk-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--surface-color); /* Latar belakang putih bersih */
+}
+
+/* Sidebar Styling */
+.frizk-sidebar {
+    width: 240px;
+    background-color: #F9FAFB; /* Sedikit abu-abu agar terpisah dari konten */
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    position: fixed;
+    height: 100vh;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    padding: 0 0.75rem;
+    letter-spacing: -0.02em;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.nav-item:hover {
+    background-color: #F3F4F6;
+    color: var(--text-main);
+}
+
+.nav-item.active {
+    background-color: #E5E7EB;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.nav-item.text-danger {
+    color: #DC2626;
+}
+
+.nav-item.text-danger:hover {
+    background-color: #FEE2E2;
+}
+
+.sidebar-footer {
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.user-info {
+    padding: 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: capitalize;
+}
+
+/* Main Content Area */
+.frizk-main {
+    flex-grow: 1;
+    margin-left: 240px; /* Memberi ruang untuk sidebar fixed */
+    display: flex;
+    flex-direction: column;
+}
+
+.frizk-topbar {
+    height: 56px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+}
+
+.breadcrumb {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.frizk-content {
+    padding: 2.5rem 2rem;
+    max-width: 1000px; /* Batasi lebar agar tetap nyaman dibaca */
+}
+
+.page-title {
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+}

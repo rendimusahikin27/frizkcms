@@ -116,16 +116,21 @@ app.get('/admin/logout', (req, res) => {
     res.redirect('/admin/login');
 });
 
+// Route Admin (Dashboard)
 app.get('/admin', requireAuth, (req, res) => {
-    // Jika sampai di sini, artinya requireAuth sudah meloloskan user
-    res.send(`
-        <div style="font-family: sans-serif; padding: 2rem;">
-            <h1>Welcome to Admin Dashboard, ${req.user.username}!</h1>
-            <p>Role Anda: ${req.user.role}</p>
-            <hr>
-            <a href="/admin/logout" style="color: red;">Logout</a>
-        </div>
-    `);
+    res.render('admin/dashboard.ejs', { 
+        title: 'Dashboard',
+        path: '/admin', 
+        user: req.user,
+        dbType: process.env.DB_TYPE
+    }, (err, html) => {
+        // TANGKAP ERROR EJS DI SINI
+        if (err) {
+            console.error("EJS Render Error:", err);
+            return res.status(500).send(`<h2 style="color:red;">EJS Error:</h2><p>${err.message}</p>`);
+        }
+        res.send(html);
+    });
 });
 
 app.get("/api/v1/posts", (req, res) => {

@@ -1,0 +1,30 @@
+        <!-- Sidebar Navigation -->
+        <aside class="frizk-sidebar">
+            <div class="sidebar-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Frizk
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Tambahkan class 'active' berdasarkan URL halaman -->
+                <a href="/admin" class="nav-item <%= typeof path !== 'undefined' && path === '/admin' ? 'active' : '' %>">
+                    Dashboard
+                </a>
+                <a href="/admin/posts" class="nav-item <%= typeof path !== 'undefined' && path === '/admin/posts' ? 'active' : '' %>">
+                    Posts
+                </a>
+                <a href="/admin/settings" class="nav-item <%= typeof path !== 'undefined' && path === '/admin/settings' ? 'active' : '' %>">
+                    Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-name"><%= user.username %></span>
+                    <span class="user-role"><%= user.role %></span>
+                </div>
+                <a href="/admin/logout" class="nav-item text-danger" style="margin-top: 0.5rem;">
+                    Log out
+                </a>
+            </div>
+        </aside>
