@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const dotenv = require("dotenv");
 const { env } = require("process");
+const { initDB } = require("./database/index");
 
 dotenv.config();
 
@@ -98,6 +99,19 @@ app.get("*", (req, res) => {
     res.send('<h1>Frontend FrizkCMS</h1><p>Halaman ini nantinya akan dirender oleh Theme Engine atau dibiarkan sebagai API murni.</p>');
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 FrizkCMS is running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+    // Jika CMS sudah diinstall (.env ada), inisialisasi Database
+    if (fs.existsSync(path.join(__dirname, '.env'))) {
+        try {
+            await initDB();
+        } catch (err) {
+            console.log("⚠️ Could not connect to database. Please check your credentials.");
+        }
+    }
+
+    app.listen(PORT, () => {
+        console.log(`🚀 FrizkCMS is running on http://localhost:${PORT}`);
+    });
+};
+
+startServer();
