@@ -1,35 +1,33 @@
-/* public/admin/css/frizk-ui.css */
 :root {
     --bg-color: #FAFAFA;
     --surface-color: #FFFFFF;
     --text-main: #111827;
     --text-muted: #6B7280;
     --border-color: #E5E7EB;
-    --accent-color: #000000; /* Vercel/Linear style black accent */
+    --accent-color: #000000;
     --accent-hover: #374151;
     --radius: 8px;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     line-height: 1.5;
+}
+
+/* Khusus untuk halaman Install & Login (Tengah Layar) */
+.auth-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* Card Container */
 .frizk-card {
     background: var(--surface-color);
     border: 1px solid var(--border-color);
@@ -38,207 +36,89 @@ body {
     width: 100%;
     max-width: 480px;
     box-shadow: var(--shadow-sm);
+    margin: 2rem auto; /* Added for standalone pages */
 }
 
-.frizk-header {
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.frizk-header h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-}
-
-.frizk-header p {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
+.frizk-header { margin-bottom: 2rem; text-align: center; }
+.frizk-header h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+.frizk-header p { color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem; }
 
 /* Form Elements */
-.form-group {
-    margin-bottom: 1.25rem;
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
+input[type="text"], input[type="password"], select {
+    width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--border-color);
+    border-radius: 6px; font-size: 0.875rem; background-color: var(--surface-color);
+    transition: all 0.2s ease; outline: none;
 }
-
-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
-
-input[type="text"],
-input[type="password"],
-select {
-    width: 100%;
-    padding: 0.625rem 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    background-color: var(--surface-color);
-    transition: all 0.2s ease;
-    outline: none;
-}
-
-input:focus, select:focus {
-    border-color: var(--text-main);
-    box-shadow: 0 0 0 1px var(--text-main);
-}
+input:focus, select:focus { border-color: var(--text-main); box-shadow: 0 0 0 1px var(--text-main); }
 
 /* Buttons */
 .btn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    border: none;
+    display: inline-flex; justify-content: center; align-items: center;
+    width: 100%; padding: 0.625rem 1rem; font-size: 0.875rem; font-weight: 500;
+    border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease; border: none;
 }
+.btn-primary { background-color: var(--accent-color); color: #fff; }
+.btn-primary:hover { background-color: var(--accent-hover); }
+.hidden { display: none !important; }
 
-.btn-primary {
-    background-color: var(--accent-color);
-    color: #fff;
-}
 
-.btn-primary:hover {
-    background-color: var(--accent-hover);
-}
+/* --- DASHBOARD LAYOUT (FULL WIDTH NAVBAR) --- */
 
-/* Utility to hide elements smoothly */
-.hidden {
-    display: none !important;
-}
-
-.frizk-layout {
-    display: flex;
-    min-height: 100vh;
-    width: 100%;
-    background-color: var(--surface-color); /* Latar belakang putih bersih */
-}
-
-/* Sidebar Styling */
-.frizk-sidebar {
-    width: 240px;
-    background-color: #F9FAFB; /* Sedikit abu-abu agar terpisah dari konten */
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem 1rem;
-    position: fixed;
-    height: 100vh;
-}
-
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
-    padding: 0 0.75rem;
-    letter-spacing: -0.02em;
-}
-
-.sidebar-nav {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 0.375rem 0.75rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.15s ease;
-}
-
-.nav-item:hover {
-    background-color: #F3F4F6;
-    color: var(--text-main);
-}
-
-.nav-item.active {
-    background-color: #E5E7EB;
-    color: var(--text-main);
-    font-weight: 600;
-}
-
-.nav-item.text-danger {
-    color: #DC2626;
-}
-
-.nav-item.text-danger:hover {
-    background-color: #FEE2E2;
-}
-
-.sidebar-footer {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
-}
-
-.user-info {
-    padding: 0 0.75rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.user-name {
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.user-role {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: capitalize;
-}
-
-/* Main Content Area */
-.frizk-main {
-    flex-grow: 1;
-    margin-left: 240px; /* Memberi ruang untuk sidebar fixed */
-    display: flex;
-    flex-direction: column;
-}
-
+/* 1. Master Navbar */
 .frizk-topbar {
-    height: 56px;
+    position: fixed; top: 0; left: 0; width: 100%; height: 56px;
+    background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    padding: 0 2rem;
-    position: sticky;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(8px);
-    z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem; z-index: 9999;
+}
+.topbar-brand { display: flex; align-items: center; font-weight: 600; gap: 0.75rem; }
+.topbar-actions { display: flex; align-items: center; gap: 1.25rem; }
+.btn-sm { padding: 0.375rem 0.875rem; font-size: 0.75rem; border-radius: 6px; }
+.icon-btn {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: color 0.2s ease;
+}
+.icon-btn:hover { color: var(--text-main); }
+.avatar {
+    width: 32px; height: 32px; border-radius: 50%; background-color: var(--accent-color);
+    color: #ffffff; display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.875rem; cursor: pointer; user-select: none;
 }
 
-.breadcrumb {
-    font-size: 0.875rem;
-    color: var(--text-muted);
+/* 2. Layout Wrapper Admin */
+.frizk-layout {
+    display: flex; min-height: 100vh; width: 100%;
+    background-color: var(--surface-color);
+    padding-top: 56px; /* Dorong konten ke bawah Navbar */
 }
 
-.frizk-content {
-    padding: 2.5rem 2rem;
-    max-width: 1000px; /* Batasi lebar agar tetap nyaman dibaca */
+/* 3. Sidebar */
+.frizk-sidebar {
+    width: 240px; background-color: #F9FAFB; border-right: 1px solid var(--border-color);
+    display: flex; flex-direction: column; padding: 1.5rem 1rem;
+    position: fixed; top: 56px; height: calc(100vh - 56px); z-index: 100;
 }
+.sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; gap: 0.25rem; }
+.nav-item {
+    display: flex; align-items: center; padding: 0.375rem 0.75rem; color: var(--text-muted);
+    text-decoration: none; border-radius: 6px; font-size: 0.875rem; font-weight: 500; transition: all 0.15s ease;
+}
+.nav-item:hover { background-color: #F3F4F6; color: var(--text-main); }
+.nav-item.active { background-color: #E5E7EB; color: var(--text-main); font-weight: 600; }
+.nav-item.text-danger { color: #DC2626; }
+.nav-item.text-danger:hover { background-color: #FEE2E2; }
+.sidebar-footer { border-top: 1px solid var(--border-color); padding-top: 1rem; }
+.user-info { padding: 0 0.75rem; display: flex; flex-direction: column; }
+.user-name { font-size: 0.875rem; font-weight: 600; }
+.user-role { font-size: 0.75rem; color: var(--text-muted); text-transform: capitalize; }
 
-.page-title {
-    font-size: 1.875rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    margin-bottom: 1.5rem;
+/* 4. Main Content */
+.frizk-main {
+    flex-grow: 1; margin-left: 240px; /* Sisakan ruang untuk sidebar */
+    display: flex; flex-direction: column;
 }
+.frizk-content { padding: 2.5rem 2rem; max-width: 1000px; }
+.page-title { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
