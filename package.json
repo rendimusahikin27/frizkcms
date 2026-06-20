@@ -1,0 +1,17 @@
+{
+  "name": "frizkcms",
+  "version": "1.0.0",
+  "description": "Modern, minimalist, and headless-ready CMS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
