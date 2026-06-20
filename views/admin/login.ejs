@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FrizkCMS</title>
+    <link rel="stylesheet" href="/public/admin/css/frizk-ui.css">
+</head>
+<body>
+    <div class="frizk-card">
+        <div class="frizk-header">
+            <h1>FrizkCMS</h1>
+            <p>Sign in to your admin workspace</p>
+        </div>
+
+        <!-- Menampilkan pesan error jika login gagal -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div style="background-color: #fee2e2; color: #991b1b; padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; margin-bottom: 1rem; text-align: center;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/admin/login" method="POST">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+    </div>
+</body>
+</html>

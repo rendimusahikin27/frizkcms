@@ -2,12 +2,15 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const dotenv = require("dotenv");
-const { env } = require("process");
-const { initDB } = require("./database/index");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const { eq, or } = require("drizzle-orm");
+
+const { initDB, getDB } = require("./database/index");
 const { runCoreMigrations } = require("./database/migrate");
 const { users } = require("./database/schema/users");
-const { getDB } = require("./database/index");
+const { requireAuth } = require("./core/middlewares/auth");
 
 dotenv.config();
 
@@ -18,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(cookieParser());
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 const triggerRestart = () => {
@@ -35,17 +39,93 @@ const triggerRestart = () => {
         console.log("🔄 tmp/restart.txt created. App will restart.");
     }
 };
-
 app.use((req, res, next) => {
-    const isInstalled = fs.existsSync(path.join(__dirname, ".env"));
-    if (isInstalled && !req.path.startsWith("/install") && !req.path.startsWith("/public")) {
-        return res.redirect("/install");
+    const isInstalled = fs.existsSync(path.join(__dirname, '.env'));
+    // Jika belum install dan akses bukan ke /install atau /public, arahkan ke install
+    if (!isInstalled && !req.path.startsWith('/install') && !req.path.startsWith('/public')) {
+        return res.redirect('/install');
+    }
+    // Jika SUDAH install tapi malah mau akses /install, arahkan ke admin
+    if (isInstalled && req.path.startsWith('/install')) {
+        return res.redirect('/admin');
     }
     next();
 });
 
-app.get("/admin", (req, res) => {
-    res.send("<h1>FrizkCMS Admin Panel</h1><p>UI akan dibangun di sini dengan HTML/CSS murni + EJS.</p>")
+app.get('/admin/login', (req, res) => {
+    const token = req.cookies.token;
+
+    // JANGAN sekadar cek token ada/tidak, tapi verifikasi.
+    // Jika token ada dan VALID, baru lempar ke /admin.
+    if (token) {
+        try {
+            jwt.verify(token, process.env.SESSION_SECRET);
+            return res.redirect('/admin'); // Token valid, tidak perlu login lagi
+        } catch (e) {
+            // Jika token sampah/expired, biarkan user di halaman login
+            res.clearCookie('token');
+        }
+    }
+    
+    const errorMsg = req.query.error === 'failed' ? 'Invalid credentials.' : 
+                     req.query.error === 'expired' ? 'Session expired. Please log in again.' : null;
+                     
+    res.render('admin/login.ejs', { error: errorMsg });
+});
+
+app.post('/admin/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const db = getDB();
+
+        // Cari user berdasarkan username ATAU email menggunakan Drizzle ORM
+        const result = await db.select().from(users).where(
+            or(eq(users.username, username), eq(users.email, username))
+        ).limit(1);
+
+        const user = result[0];
+
+        // Cek apakah user ada dan password cocok
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.redirect('/admin/login?error=failed');
+        }
+
+        // Buat JWT Token (Berlaku 24 jam)
+        const token = jwt.sign(
+            { id: user.id, username: user.username, role: user.role }, 
+            process.env.SESSION_SECRET, 
+            { expiresIn: '24h' }
+        );
+
+        // Set Cookie
+        res.cookie('token', token, {
+            httpOnly: true, // Tidak bisa diakses oleh JavaScript frontend (Aman dari XSS)
+            secure: process.env.NODE_ENV === 'production', // Gunakan HTTPS jika production
+            maxAge: 24 * 60 * 60 * 1000 // 24 jam
+        });
+
+        res.redirect('/admin');
+    } catch (error) {
+        console.error("Login Error:", error);
+        res.redirect('/admin/login?error=failed');
+    }
+});
+
+app.get('/admin/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/admin/login');
+});
+
+app.get('/admin', requireAuth, (req, res) => {
+    // Jika sampai di sini, artinya requireAuth sudah meloloskan user
+    res.send(`
+        <div style="font-family: sans-serif; padding: 2rem;">
+            <h1>Welcome to Admin Dashboard, ${req.user.username}!</h1>
+            <p>Role Anda: ${req.user.role}</p>
+            <hr>
+            <a href="/admin/logout" style="color: red;">Logout</a>
+        </div>
+    `);
 });
 
 app.get("/api/v1/posts", (req, res) => {
