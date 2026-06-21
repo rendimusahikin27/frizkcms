@@ -296,9 +296,65 @@ app.post('/admin/settings', requireAuth, async (req, res) => {
 });
 
 
-// --- API ROUTES ---
-app.get('/api/v1/posts', (req, res) => {
-    res.json({ success: true, message: "FrizkCMS API is running", data: [] });
+// --- API ROUTES (HEADLESS CMS) ---
+
+// Middleware khusus API untuk CORS (Mengizinkan akses dari aplikasi/domain lain)
+app.use('/api', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Mengizinkan semua domain
+    res.header('Access-Control-Allow-Methods', 'GET');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
+// 1. Get Semua Artikel (List)
+app.get('/api/v1/posts', async (req, res) => {
+    try {
+        const db = getDB();
+        // Hanya ambil post yang statusnya 'published'
+        const publishedPosts = await db.select({
+            id: posts.id,
+            title: posts.title,
+            slug: posts.slug,
+            content: posts.content,
+            createdAt: posts.createdAt
+        }).from(posts)
+          .where(eq(posts.status, 'published'))
+          .orderBy(desc(posts.id));
+
+        res.json({
+            success: true,
+            total: publishedPosts.length,
+            data: publishedPosts
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// 2. Get Detail Satu Artikel berdasarkan Slug
+app.get('/api/v1/posts/:slug', async (req, res) => {
+    try {
+        const db = getDB();
+        const slug = req.params.slug;
+        
+        const result = await db.select({
+            id: posts.id,
+            title: posts.title,
+            slug: posts.slug,
+            content: posts.content,
+            createdAt: posts.createdAt
+        }).from(posts)
+          .where(and(eq(posts.slug, slug), eq(posts.status, 'published')))
+          .limit(1);
+
+        if (result.length === 0) {
+            return res.status(404).json({ success: false, message: 'Post not found' });
+        }
+
+        res.json({ success: true, data: result[0] });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 
