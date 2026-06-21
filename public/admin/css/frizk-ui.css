@@ -122,3 +122,69 @@ input:focus, select:focus { border-color: var(--text-main); box-shadow: 0 0 0 1p
 }
 .frizk-content { padding: 2.5rem 2rem; max-width: 1000px; }
 .page-title { font-size: 1.875rem; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
+
+/* --- FRIZKBLOCK EDITOR --- */
+.frizk-editor-container {
+    width: 100%;
+    min-height: 400px;
+    padding: 1rem 0;
+    cursor: text;
+}
+
+.frizk-block {
+    outline: none;
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* Typography berdasarkan tipe block */
+.frizk-block[data-type="p"] { font-size: 1.125rem; color: var(--text-main); }
+.frizk-block[data-type="h1"] { font-size: 2.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; line-height: 1.2; letter-spacing: -0.025em; }
+.frizk-block[data-type="h2"] { font-size: 1.875rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; letter-spacing: -0.025em; }
+.frizk-block[data-type="quote"] { font-size: 1.25rem; font-style: italic; border-left: 4px solid var(--accent-color); padding-left: 1.5rem; color: var(--text-muted); }
+
+/* Placeholder keren */
+.frizk-block:empty:before {
+    content: attr(data-placeholder);
+    color: #9CA3AF;
+    pointer-events: none;
+    display: block; /* For Firefox */
+    font-style: italic;
+}
+
+/* Slash Menu (Pop-up modern) */
+.slash-menu {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    width: 240px;
+    z-index: 1000;
+    padding: 0.5rem;
+    display: none; /* Hidden by default */
+}
+.slash-menu.active { display: block; }
+.slash-item {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background 0.1s ease;
+}
+.slash-item:hover, .slash-item.selected {
+    background: #F3F4F6;
+    color: var(--accent-color);
+}
+.slash-item-icon {
+    width: 24px; height: 24px; background: #E5E7EB; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #4B5563;
+}
