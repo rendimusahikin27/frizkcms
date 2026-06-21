@@ -1,0 +1,47 @@
+<%- include('../../partials/header.ejs') %>
+<%- include('../../partials/topbar.ejs') %>
+<%- include('../../partials/sidebar.ejs') %>
+
+<main class="frizk-main">
+    <div class="frizk-content">
+        <h1 class="page-title">Write a new Post</h1>
+
+        <form action="/admin/posts/new" method="POST">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                
+                <!-- Main Content Column -->
+                <div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" placeholder="Post Title" required style="font-size: 1.25rem; font-weight: bold; padding: 0.75rem;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea id="content" name="content" rows="15" placeholder="Write your content here..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; resize: vertical; outline: none;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sidebar Settings Column -->
+                <div>
+                    <div style="background: #F9FAFB; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius);">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Publishing</h3>
+                        
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Post</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('../../partials/footer.ejs') %>

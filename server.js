@@ -10,6 +10,7 @@ const { eq, or } = require('drizzle-orm');
 const { initDB, getDB } = require('./database/index');
 const { runCoreMigrations } = require('./database/migrate');
 const { users } = require('./database/schema/users');
+const { posts } = require("./database/schema/posts");
 const { requireAuth, checkAuth } = require('./core/middlewares/auth');
 
 dotenv.config();
@@ -140,6 +141,48 @@ app.get('/admin', requireAuth, (req, res) => {
         if (err) return res.status(500).send(`EJS Error: ${err.message}`);
         res.send(html);
     });
+});
+
+// 1. Tampilkan daftar Posts
+app.get('/admin/posts', requireAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        const allPosts = await db.select().from(posts); // Bisa ditambahkan order by nanti
+        
+        res.render('admin/posts/index.ejs', { 
+            title: 'Posts', path: '/admin/posts', user: req.user, posts: allPosts 
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// 2. Tampilkan form buat Post baru
+app.get('/admin/posts/new', requireAuth, (req, res) => {
+    res.render('admin/posts/form.ejs', { 
+        title: 'New Post', path: '/admin/posts', user: req.user 
+    });
+});
+
+// 3. Proses simpan Post baru
+app.post('/admin/posts/new', requireAuth, async (req, res) => {
+    try {
+        const { title, content, status } = req.body;
+        // Generate slug sederhana (hilangkan spasi, huruf kecil)
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+        
+        const db = getDB();
+        await db.insert(posts).values({
+            title,
+            slug,
+            content,
+            status
+        });
+        
+        res.redirect('/admin/posts');
+    } catch (error) {
+        res.status(500).send("Error creating post. Slug might already exist. " + error.message);
+    }
 });
 
 

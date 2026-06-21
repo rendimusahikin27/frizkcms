@@ -1,0 +1,47 @@
+<%- include('../../partials/header.ejs') %>
+<%- include('../../partials/topbar.ejs') %>
+<%- include('../../partials/sidebar.ejs') %>
+
+<main class="frizk-main">
+    <div class="frizk-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1 class="page-title" style="margin-bottom: 0;">All Posts</h1>
+            <a href="/admin/posts/new" class="btn btn-primary" style="width: auto;">+ Create New</a>
+        </div>
+
+        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead style="background-color: #F9FAFB; border-bottom: 1px solid var(--border-color);">
+                    <tr>
+                        <th style="padding: 1rem; font-weight: 500; font-size: 0.875rem; color: var(--text-muted);">Title</th>
+                        <th style="padding: 1rem; font-weight: 500; font-size: 0.875rem; color: var(--text-muted);">Status</th>
+                        <th style="padding: 1rem; font-weight: 500; font-size: 0.875rem; color: var(--text-muted); width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (posts.length === 0) { %>
+                        <tr>
+                            <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-muted);">No posts found. Start writing!</td>
+                        </tr>
+                    <% } else { %>
+                        <% posts.forEach(post => { %>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 1rem; font-weight: 500;"><%= post.title %></td>
+                                <td style="padding: 1rem;">
+                                    <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: <%= post.status === 'published' ? '#D1FAE5' : '#F3F4F6' %>; color: <%= post.status === 'published' ? '#065F46' : '#374151' %>;">
+                                        <%= post.status.toUpperCase() %>
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <a href="#" style="color: var(--text-muted); text-decoration: none; font-size: 0.875rem;">Edit</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<%- include('../../partials/footer.ejs') %>

@@ -14,6 +14,7 @@ const executeRaw = async (db, dialect, query) => {
 const runCoreMigrations = async (dialect, prefix) => {
     const db = getDB();
     const tableUsers = `${prefix}users`;
+    const tablePosts = `${prefix}posts`;
 
     console.log(`⏳ Running migrations for ${dialect}...`);
 
@@ -30,6 +31,17 @@ const runCoreMigrations = async (dialect, prefix) => {
                     created_at INTEGER DEFAULT (cast(strftime('%s','now') as int))
                 );
             `);
+
+            await executeRaw(db, dialect, `
+                CREATE TABLE IF NOT EXISTS ${tablePosts} (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    slug TEXT NOT NULL UNIQUE,
+                    content TEXT,
+                    status TEXT DEFAULT 'draft',
+                    created_at INTEGER DEFAULT (cast(strftime('%s','now') as int))
+                );
+            `);
         } else if (dialect === 'mysql') {
             await executeRaw(db, dialect, `
                 CREATE TABLE IF NOT EXISTS ${tableUsers} (
@@ -38,6 +50,17 @@ const runCoreMigrations = async (dialect, prefix) => {
                     email VARCHAR(255) NOT NULL UNIQUE,
                     password VARCHAR(255) NOT NULL,
                     role VARCHAR(20) DEFAULT 'admin',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+
+            await executeRaw(db, dialect, `
+                CREATE TABLE IF NOT EXISTS ${tablePosts} (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    slug VARCHAR(255) NOT NULL UNIQUE,
+                    content TEXT,
+                    status VARCHAR(20) DEFAULT 'draft',
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `);
@@ -52,9 +75,20 @@ const runCoreMigrations = async (dialect, prefix) => {
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `);
+
+            await executeRaw(db, dialect, `
+                CREATE TABLE IF NOT EXISTS ${tablePosts} (
+                    id SERIAL PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    slug VARCHAR(255) NOT NULL UNIQUE,
+                    content TEXT,
+                    status VARCHAR(20) DEFAULT 'draft',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
         }
         
-        console.log(`✅ Table '${tableUsers}' is ready.`);
+        console.log(`✅ Table '${tableUsers}' and '${tablePosts}' is ready.`);
     } catch (error) {
         console.error("❌ Migration failed:", error.message);
         throw error;

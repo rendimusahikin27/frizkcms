@@ -20,12 +20,12 @@ const CoreTypes = {
         return t.text(name);
     },
     text: (t, dialect, name) => {
-        return t.text("name");
+        return t.text(name);
     },
     json: (t, dialect, name) => {
         if (dialect === "postgres") return t.jsonb(name);
         if (dialect === "mysql") return t.json(name);
-        return t.text(name, { mode: json });
+        return t.text(name, { mode: "json" });
     },
     timestamp: (t, dialect, name) => {
         if (dialect === "mysql") return t.timestamp(name).defaultNow();
