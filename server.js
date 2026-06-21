@@ -241,6 +241,60 @@ app.post('/admin/posts/delete/:id', requireAuth, async (req, res) => {
     }
 });
 
+// --- ROUTES SETTINGS (PROFIL ADMIN) ---
+
+// 1. Tampilkan halaman Settings
+app.get('/admin/settings', requireAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        // Ambil data user yang sedang login dari database
+        const result = await db.select().from(users).where(eq(users.id, req.user.id)).limit(1);
+        
+        if (result.length === 0) return res.redirect('/admin/logout');
+
+        res.render('admin/settings.ejs', { 
+            title: 'Settings', 
+            path: '/admin/settings', 
+            user: req.user, 
+            adminData: result[0],
+            message: req.query.msg // Untuk menampilkan pesan sukses/error
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// 2. Proses update Settings
+app.post('/admin/settings', requireAuth, async (req, res) => {
+    try {
+        const { username, email, password, confirmPassword } = req.body;
+        const db = getDB();
+        
+        let updateData = { username, email };
+
+        // Jika user mengisi kolom password, berarti dia ingin ganti password
+        if (password) {
+            if (password !== confirmPassword) {
+                return res.redirect('/admin/settings?msg=password_mismatch');
+            }
+            // Hash password baru
+            updateData.password = await bcrypt.hash(password, 10);
+        }
+
+        // Update database
+        await db.update(users).set(updateData).where(eq(users.id, req.user.id));
+
+        // Karena username mungkin berubah, kita perbarui session token-nya
+        const token = jwt.sign({ id: req.user.id, username: username, role: req.user.role }, process.env.SESSION_SECRET, { expiresIn: '24h' });
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', maxAge: 24 * 60 * 60 * 1000 });
+
+        res.redirect('/admin/settings?msg=success');
+    } catch (error) {
+        // Error biasanya terjadi jika username/email sudah dipakai orang lain (Unique Constraint)
+        res.redirect('/admin/settings?msg=error');
+    }
+});
+
 
 // --- API ROUTES ---
 app.get('/api/v1/posts', (req, res) => {

@@ -1,0 +1,58 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/topbar.ejs') %>
+<%- include('../partials/sidebar.ejs') %>
+
+<main class="frizk-main">
+    <div class="frizk-content">
+        <h1 class="page-title">Account Settings</h1>
+
+        <!-- Notifikasi Pesan -->
+        <% if (message === 'success') { %>
+            <div style="background-color: #D1FAE5; color: #065F46; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                Profile updated successfully!
+            </div>
+        <% } else if (message === 'password_mismatch') { %>
+            <div style="background-color: #FEE2E2; color: #991B1B; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                Passwords do not match. Please try again.
+            </div>
+        <% } else if (message === 'error') { %>
+            <div style="background-color: #FEE2E2; color: #991B1B; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                Failed to update profile. Username or email might already be taken.
+            </div>
+        <% } %>
+
+        <div style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 2rem; max-width: 600px;">
+            <form action="/admin/settings" method="POST">
+                
+                <h3 style="font-size: 1.125rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Profile Information</h3>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="<%= adminData.username %>" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="<%= adminData.email %>" required>
+                </div>
+
+                <h3 style="font-size: 1.125rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Change Password</h3>
+                <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;">Leave these fields blank if you don't want to change your password.</p>
+
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter new password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer.ejs') %>
