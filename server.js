@@ -134,13 +134,22 @@ app.get('/admin/logout', (req, res) => {
 
 
 // --- ROUTES ADMIN TERPROTEKSI ---
-app.get('/admin', requireAuth, (req, res) => {
-    res.render('admin/dashboard.ejs', { 
-        title: 'Dashboard', path: '/admin', user: req.user, dbType: process.env.DB_TYPE
-    }, (err, html) => {
-        if (err) return res.status(500).send(`EJS Error: ${err.message}`);
-        res.send(html);
-    });
+app.get('/admin', requireAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        // Ambil semua post untuk dihitung jumlahnya
+        const allPosts = await db.select().from(posts);
+        
+        res.render('admin/dashboard.ejs', { 
+            title: 'Dashboard', 
+            path: '/admin', 
+            user: req.user, 
+            dbType: process.env.DB_TYPE,
+            totalPosts: allPosts.length // Kirim total post ke tampilan
+        });
+    } catch (err) {
+        res.status(500).send(`Error: ${err.message}`);
+    }
 });
 
 // 1. Tampilkan daftar Posts
@@ -182,6 +191,53 @@ app.post('/admin/posts/new', requireAuth, async (req, res) => {
         res.redirect('/admin/posts');
     } catch (error) {
         res.status(500).send("Error creating post. Slug might already exist. " + error.message);
+    }
+});
+
+app.get('/admin/posts/edit/:id', requireAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        const postId = parseInt(req.params.id);
+        const result = await db.select().from(posts).where(eq(posts.id, postId)).limit(1);
+        
+        if (result.length === 0) return res.redirect('/admin/posts');
+
+        res.render('admin/posts/edit.ejs', { 
+            title: 'Edit Post', path: '/admin/posts', user: req.user, post: result[0] 
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// 5. Proses simpan Edit Post
+app.post('/admin/posts/edit/:id', requireAuth, async (req, res) => {
+    try {
+        const { title, content, status } = req.body;
+        const postId = parseInt(req.params.id);
+        
+        const db = getDB();
+        await db.update(posts)
+            .set({ title, content, status })
+            .where(eq(posts.id, postId));
+            
+        res.redirect('/admin/posts');
+    } catch (error) {
+        res.status(500).send("Error updating post. " + error.message);
+    }
+});
+
+// 6. Proses Delete Post
+app.post('/admin/posts/delete/:id', requireAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        const postId = parseInt(req.params.id);
+        
+        await db.delete(posts).where(eq(posts.id, postId));
+        
+        res.redirect('/admin/posts');
+    } catch (error) {
+        res.status(500).send("Error deleting post. " + error.message);
     }
 });
 
