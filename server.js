@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const { eq, or } = require('drizzle-orm');
+const { eq, or, desc, and } = require('drizzle-orm');
 
 const { initDB, getDB } = require('./database/index');
 const { runCoreMigrations } = require('./database/migrate');
@@ -248,21 +248,54 @@ app.get('/api/v1/posts', (req, res) => {
 });
 
 
-// --- FRONTEND THEME (FALLBACK) DENGAN ADMIN BAR ---
-app.get('*', checkAuth, (req, res) => {
-    let html = `<!DOCTYPE html><html><head><title>My FrizkCMS Website</title><link rel="stylesheet" href="/public/admin/css/frizk-ui.css"></head><body style="${req.user ? 'padding-top: 56px;' : ''}">`;
-    
-    // Inject Master Navbar jika login
-    if (req.user) {
-        const topbarPath = path.join(__dirname, 'views', 'partials', 'topbar.ejs');
-        html += require('ejs').render(fs.readFileSync(topbarPath, 'utf8'), { user: req.user, path: req.path });
-    }
+// --- FRONTEND ROUTES ---
 
-    html += `<div style="max-width: 800px; margin: 4rem auto; padding: 2rem;">
-        <h1>Hello World!</h1><p>Ini adalah halaman publik dari website Anda.</p><p>Coba buka <a href="/admin">Dashboard Admin</a>.</p>
-    </div></body></html>`;
-    
-    res.send(html);
+// 1. Halaman Beranda (Daftar Postingan)
+app.get('/', checkAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        // Ambil data yang statusnya 'published', urutkan dari ID terbesar (terbaru)
+        const publishedPosts = await db.select()
+            .from(posts)
+            .where(eq(posts.status, 'published'))
+            .orderBy(desc(posts.id));
+
+        res.render('front/index.ejs', {
+            title: 'Welcome',
+            user: req.user,
+            path: '/',
+            posts: publishedPosts
+        });
+    } catch (err) {
+        res.status(500).send("Database Error: " + err.message);
+    }
+});
+
+// 2. Halaman Baca Artikel (Single Post)
+app.get('/post/:slug', checkAuth, async (req, res) => {
+    try {
+        const db = getDB();
+        const slug = req.params.slug;
+        
+        // Cari post berdasarkan slug DAN pastikan statusnya 'published'
+        const result = await db.select()
+            .from(posts)
+            .where(and(eq(posts.slug, slug), eq(posts.status, 'published')))
+            .limit(1);
+
+        if (result.length === 0) {
+            return res.status(404).send('<h1>404 - Post Not Found</h1><a href="/">Back to Home</a>');
+        }
+
+        res.render('front/single.ejs', {
+            title: result[0].title,
+            user: req.user,
+            path: '/post',
+            post: result[0]
+        });
+    } catch (err) {
+        res.status(500).send("Database Error: " + err.message);
+    }
 });
 
 

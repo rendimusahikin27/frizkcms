@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= post.title %> - FrizkCMS</title>
+    <link rel="stylesheet" href="/public/admin/css/frizk-ui.css">
+</head>
+<body style="<%= user ? 'padding-top: 56px;' : '' %>">
+    
+    <% if (user) { %>
+        <%- include('../partials/topbar.ejs') %>
+    <% } %>
+
+    <main style="max-width: 800px; margin: 4rem auto; padding: 0 1.5rem;">
+        <a href="/" style="color: var(--text-muted); text-decoration: none; font-size: 0.875rem;">&larr; Back to Home</a>
+        
+        <article style="margin-top: 2rem;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1.5rem; letter-spacing: -0.025em; line-height: 1.2;">
+                <%= post.title %>
+            </h1>
+
+            <!-- Konten Artikel dengan mempertahankan format paragraf (white-space: pre-wrap) -->
+            <div style="font-size: 1.125rem; line-height: 1.8; color: var(--text-main); white-space: pre-wrap;">
+                <%- post.content %>
+            </div>
+        </article>
+    </main>
+
+</body>
+</html>
