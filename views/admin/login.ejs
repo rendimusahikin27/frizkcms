@@ -1,36 +1,542 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - FrizkCMS</title>
-    <link rel="stylesheet" href="/public/admin/css/frizk-ui.css">
+    <title>Masuk ke Frizk</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #17566A;
+            --primary-dark: #0E3A48;
+            --bg-color: #F8F8F8;
+            --surface: #FFFFFF;
+            --off-white: #F2F4F3;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
+
+        /* Reset Total */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* Matikan scroll body */
+        }
+
+        /* PEMBUNGKUS LAYOUT ABSOLUT (Memaksa Kiri-Kanan) */
+        .split-layout {
+            display: flex;
+            flex-direction: row !important;
+            /* Paksa berjajar ke samping */
+            width: 100vw;
+            /* Lebar 100% dari layar */
+            height: 100vh;
+            /* Tinggi 100% dari layar */
+        }
+
+        /* === SISI KIRI: BRAND PANEL === */
+        .brand-panel {
+            width: 50%;
+            /* Tepat setengah layar */
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--off-white);
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-panel::before,
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            background: var(--off-white);
+        }
+
+        .brand-panel::before {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            right: -150px;
+        }
+
+        .brand-panel::after {
+            width: 350px;
+            height: 350px;
+            bottom: -100px;
+            left: -100px;
+            opacity: 0.03;
+        }
+
+        .brand-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-quote {
+            position: relative;
+            z-index: 10;
+            max-width: 480px;
+        }
+
+        .quote-mark {
+            font-family: var(--font-serif);
+            font-size: 5rem;
+            line-height: 1;
+            color: var(--off-white);
+            opacity: 0.3;
+            margin-bottom: -1rem;
+        }
+
+        .brand-quote h2 {
+            font-family: var(--font-serif);
+            font-size: 1.875rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-quote p {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            line-height: 1.7;
+        }
+
+        .brand-footer {
+            position: relative;
+            z-index: 10;
+            font-size: 0.75rem;
+            opacity: 0.5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .brand-footer-links a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .brand-footer-links a:hover {
+            opacity: 1;
+            color: var(--off-white);
+        }
+
+        /* === SISI KANAN: FORM PANEL === */
+        .form-panel {
+            width: 50%;
+            /* Tepat setengah layar */
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .panel-indicator {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .form-container h1 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .form-container>p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Floating Label Input */
+        .input-floating {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .input-floating input {
+            width: 100%;
+            /* PADDING ATAS DITAMBAH MENJADI 1.75rem AGAR TEKS TURUN */
+            padding: 1.75rem 1rem 0.5rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--surface);
+            outline: none;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+            font-weight: 500;
+        }
+
+        .input-floating input:focus,
+        .input-floating input:not(:placeholder-shown) {
+            border-color: var(--primary);
+        }
+
+        .input-floating input:focus {
+            box-shadow: 0 0 0 3px rgba(23, 86, 106, 0.08);
+        }
+
+        .input-floating label {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 0.95rem;
+            background: transparent;
+        }
+
+        /* LABEL DINAIKKAN SEDIKIT KE ATAS (top: 0.4rem) */
+        .input-floating input:focus+label,
+        .input-floating input:not(:placeholder-shown)+label {
+            top: 0.4rem;
+            transform: translateY(0);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .toggle-pass-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            transition: color 0.2s;
+        }
+
+        .toggle-pass-icon:hover {
+            color: var(--primary);
+            background: var(--bg-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--off-white);
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 14px rgba(23, 86, 106, 0.2);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(23, 86, 106, 0.3);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.25rem 0 1.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: normal;
+            color: var(--text-muted);
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .forgot-link:hover {
+            opacity: 0.7;
+        }
+
+        .error-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #991B1B;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Logo khusus mobile (Sembunyi di Desktop, Tampil di HP) */
+        .mobile-brand {
+            display: none;
+        }
+
+        /* Di HP/Tablet kecil, Sisi kiri ditutup, Sisi kanan 100% penuh */
+        @media (max-width: 850px) {
+            .brand-panel {
+                display: none !important;
+            }
+
+            .form-panel {
+                width: 100% !important;
+                padding: 1.5rem;
+            }
+
+            /* Munculkan logo mobile */
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-family: var(--font-serif);
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--primary);
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="frizk-card">
-        <div class="frizk-header">
-            <h1>FrizkCMS</h1>
-            <p>Sign in to your admin workspace</p>
+
+    <div class="split-layout">
+
+        <!-- SISI KIRI -->
+        <div class="brand-panel">
+            <div class="brand-top">
+                <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="none" />
+                    <circle cx="50" cy="50" r="41" fill="none" stroke="#F2F4F3" stroke-width="2.5" opacity="0.7" />
+                    <path fill="#F2F4F3" d="
+                        M 31 22 L 31 24 C 34 24, 35 25, 35 28 L 35 72 
+                        C 35 75, 34 76, 31 76 L 31 78 L 52 78 L 52 76 
+                        C 49 76, 48 75, 48 72 L 48 53 L 57 53 
+                        C 60 53, 62 55, 63 58 L 65 58 L 64 45 L 62 45 
+                        C 61 48, 59 50, 57 50 L 48 50 
+                        C 40 50, 31 54, 27 65 C 28 58, 35 48, 48 48 
+                        L 48 28 L 63 28 C 67 28, 69 31, 70 36 
+                        L 72 36 L 70 22 Z" />
+                </svg>
+                Frizk
+            </div>
+
+            <div class="brand-quote">
+                <div class="quote-mark">"</div>
+                <h2>Tempat di mana ide-ide Anda berubah menjadi konten yang berarti.</h2>
+                <p>FrizkCMS dirancang untuk para kreator yang menghargai kesederhanaan, kecepatan, dan estetika dalam
+                    membangun karya digital.</p>
+            </div>
+
+            <div class="brand-footer">
+                <span>© <%= new Date().getFullYear() %> FrizkCMS</span>
+                <div class="brand-footer-links">
+                    <a href="/">Kembali ke Situs</a>
+                </div>
+            </div>
         </div>
 
-        <!-- Menampilkan pesan error jika login gagal -->
-        <% if (typeof error !== 'undefined' && error) { %>
-            <div style="background-color: #fee2e2; color: #991b1b; padding: 0.75rem; border-radius: 6px; font-size: 0.875rem; margin-bottom: 1rem; text-align: center;">
-                <%= error %>
+        <!-- SISI KANAN -->
+        <div class="form-panel">
+            <div class="panel-indicator">
+                <div class="status-dot"></div>Sistem aktif
             </div>
-        <% } %>
 
-        <form action="/admin/login" method="POST">
-            <div class="form-group">
-                <label for="username">Username or Email</label>
-                <input type="text" id="username" name="username" required autofocus>
+            <div class="form-container">
+
+                <!-- LOGO KHUSUS MOBILE -->
+                <div class="mobile-brand">
+                    <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="48" fill="#17566A" />
+                        <circle cx="50" cy="50" r="41" fill="none" stroke="#F2F4F3" stroke-width="2.5" />
+                        <path fill="#F2F4F3" d="
+                            M 31 22 L 31 24 C 34 24, 35 25, 35 28 L 35 72 
+                            C 35 75, 34 76, 31 76 L 31 78 L 52 78 L 52 76 
+                            C 49 76, 48 75, 48 72 L 48 53 L 57 53 
+                            C 60 53, 62 55, 63 58 L 65 58 L 64 45 L 62 45 
+                            C 61 48, 59 50, 57 50 L 48 50 
+                            C 40 50, 31 54, 27 65 C 28 58, 35 48, 48 48 
+                            L 48 28 L 63 28 C 67 28, 69 31, 70 36 
+                            L 72 36 L 70 22 Z" />
+                    </svg>
+                    Frizk
+                </div>
+
+                <h1>Selamat datang kembali</h1>
+                <p>Masuk untuk melanjutkan pekerjaan Anda di FrizkCMS.</p>
+
+                <% if (typeof error !=='undefined' && error) { %>
+                    <div class="error-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <%= error %>
+                    </div>
+                    <% } %>
+
+                        <form action="/admin/login" method="POST">
+                            <div class="input-floating">
+                                <input type="text" id="username" name="username" placeholder=" " required autofocus>
+                                <label for="username">Nama pengguna atau email</label>
+                            </div>
+
+                            <div class="input-floating">
+                                <input type="password" id="password" name="password" placeholder=" " required
+                                    style="padding-right: 3rem;">
+                                <label for="password">Kata sandi</label>
+                                <button type="button" class="toggle-pass-icon" onclick="togglePass()">
+                                    <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="form-options">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="remember" name="remember">
+                                    <label for="remember">Ingat saya</label>
+                                </div>
+                                <a href="#" class="forgot-link">Lupa sandi?</a>
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                Masuk ke Dasbor
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </form>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
-    </div>
+        </div>
+
+    </div> <!-- Akhir Split Layout -->
+
+    <script>
+        function togglePass() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eye-icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            }
+        }
+    </script>
 </body>
+
 </html>

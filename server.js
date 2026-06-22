@@ -80,11 +80,13 @@ app.post('/install', async (req, res) => {
         const hashedPassword = await bcrypt.hash(adminPass, 10);
         await db.insert(users).values({ username: adminUser, email: adminEmail, password: hashedPassword, role: 'admin' });
         triggerRestart();
-        res.send('<div class="auth-wrapper"><div class="frizk-card" style="text-align:center;"><h1>Installation Complete!</h1><p style="margin-bottom:1rem;">Welcome to FrizkCMS.</p><a href="/admin" class="btn btn-primary">Go to Admin Panel</a></div></div>');
+        // res.send('<div class="auth-wrapper"><div class="frizk-card" style="text-align:center;"><h1>Installation Complete!</h1><p style="margin-bottom:1rem;">Welcome to FrizkCMS.</p><a href="/admin" class="btn btn-primary">Go to Admin Panel</a></div></div>');
+        res.render('install/index.ejs', { success: true, adminUser: adminUser });
     } catch (error) {
         console.error(error);
         if (fs.existsSync(path.join(__dirname, '.env'))) fs.unlinkSync(path.join(__dirname, '.env'));
-        res.status(500).send(`Installation Failed: ${error.message}. <a href="/install">Try Again</a>`);
+        // res.status(500).send(`Installation Failed: ${error.message}. <a href="/install">Try Again</a>`);
+        res.render('install/index.ejs', { success: false, error: error.message });
     }
 });
 

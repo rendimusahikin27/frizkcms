@@ -1,224 +1,190 @@
 <%- include('../../partials/header.ejs') %>
-    <%- include('../../partials/topbar.ejs') %>
-        <%- include('../../partials/sidebar.ejs') %>
+<%- include('../../partials/topbar.ejs') %>
+<%- include('../../partials/sidebar.ejs') %>
 
-            <main class="frizk-main">
-                <div class="frizk-content">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h1 class="page-title" style="margin-bottom: 0;">Edit Post</h1>
-                        <a href="/admin/posts"
-                            style="color: var(--text-muted); text-decoration: none; font-size: 0.875rem;">&larr; Back to
-                            Posts</a>
+<main class="frizk-main">
+    <div class="frizk-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1 class="page-title" style="margin-bottom: 0;">Edit Post</h1>
+            <a href="/admin/posts" style="color: var(--text-muted); text-decoration: none; font-size: 0.875rem;">&larr; Back to Posts</a>
+        </div>
+
+        <form action="/admin/posts/edit/<%= post.id %>" method="POST">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                
+                <!-- Main Content Column -->
+                <div>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" value="<%= post.title %>" required style="font-size: 1.25rem; font-weight: bold; padding: 0.75rem;">
                     </div>
-
-                    <form action="/admin/posts/edit/<%= post.id %>" method="POST">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-
-                            <!-- Main Content Column -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <input type="text" id="title" name="title" value="<%= post.title %>" required
-                                        style="font-size: 1.25rem; font-weight: bold; padding: 0.75rem;">
-                                </div>
-
-                                <div class="form-group" style="position: relative;">
-                                    <!-- Ini adalah elemen visual editor FrizkBlock -->
-                                    <div id="frizk-editor" class="frizk-editor-container">
-                                        <!-- Jika konten kosong, beri block default -->
-                                        <% if (!post.content) { %>
-                                            <div class="frizk-block" contenteditable="true" data-type="p"
-                                                data-placeholder="Press '/' for commands, or type text..."></div>
-                                            <% } else { %>
-                                                <!-- Trik sederhana merubah <p> / <h1> database kembali menjadi frizk-block -->
-                                                <%- post.content .replace(/<h1>/g, '<div class="frizk-block"
-                                                        contenteditable="true" data-type="h1">')
-                                                        .replace(/<\ /h1>/g, '</div>')
-                                                    .replace(/<h2>/g, '<div class="frizk-block" contenteditable="true"
-                                                            data-type="h2">')
-                                                            .replace(/<\ /h2>/g, '</div>')
-                                                        .replace(/<blockquote>/g, '<div class="frizk-block"
-                                                                contenteditable="true" data-type="quote">')
-                                                                .replace(/<\ /blockquote>/g, '</div>')
-                                                            .replace(/<p>/g, '
-                                                            <div class="frizk-block" contenteditable="true"
-                                                                data-type="p">')
-                                                                .replace(/<\ /p>/g, '</div>')
-                                                            %>
-                                                            <% } %>
-                                    </div>
-
-                                    <!-- Menu Pop-up Slash Command (Awalnya tersembunyi) -->
-                                    <div id="slash-menu" class="slash-menu">
-                                        <div
-                                            style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; padding-left: 0.5rem; text-transform: uppercase; font-weight: bold;">
-                                            Basic Blocks</div>
-                                        <div class="slash-item" data-action="p">
-                                            <div class="slash-item-icon">P</div> Text
-                                        </div>
-                                        <div class="slash-item" data-action="h1">
-                                            <div class="slash-item-icon">H1</div> Heading 1
-                                        </div>
-                                        <div class="slash-item" data-action="h2">
-                                            <div class="slash-item-icon">H2</div> Heading 2
-                                        </div>
-                                        <div class="slash-item" data-action="quote">
-                                            <div class="slash-item-icon">"</div> Quote
-                                        </div>
-                                    </div>
-
-                                    <!-- Hidden Input ini yang akan dikirim ke Backend Server.js -->
-                                    <input type="hidden" id="hidden-content" name="content">
-                                </div>
-                            </div>
-
-                            <!-- Sidebar Settings Column -->
-                            <div>
-                                <div
-                                    style="background: #F9FAFB; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius);">
-                                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Publishing</h3>
-
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <select id="status" name="status">
-                                            <option value="draft" <%=post.status==='draft' ? 'selected' : '' %>>Draft
-                                            </option>
-                                            <option value="published" <%=post.status==='published' ? 'selected' : '' %>
-                                                >Published</option>
-                                        </select>
-                                    </div>
-
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
-                                        Slug: <strong>
-                                            <%= post.slug %>
-                                        </strong>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update
-                                        Post</button>
-                                </div>
-                            </div>
-
+                    
+                    <div class="form-group" style="position: relative;">
+                        <label>Content</label>
+                        
+                        <!-- FrizkBlock Editor -->
+                        <div id="frizk-editor" class="frizk-editor-container" style="border: 1px solid var(--border-color); border-radius: 6px; padding: 1.5rem; background: var(--surface-color);">
+                            <% if (!post.content || post.content.trim() === '') { %>
+                                <div class="frizk-block" contenteditable="true" data-type="p" data-placeholder="Press '/' for commands, or type text..."></div>
+                            <% } else { %>
+                                <!-- Render konten database kembali menjadi FrizkBlock -->
+                                <%- post.content
+                                    .replace(/<h1>/g, '<div class="frizk-block" contenteditable="true" data-type="h1" data-placeholder="H1...">')
+                                    .replace(/<\/h1>/g, '</div>')
+                                    .replace(/<h2>/g, '<div class="frizk-block" contenteditable="true" data-type="h2" data-placeholder="H2...">')
+                                    .replace(/<\/h2>/g, '</div>')
+                                    .replace(/<blockquote>/g, '<div class="frizk-block" contenteditable="true" data-type="quote" data-placeholder="QUOTE...">')
+                                    .replace(/<\/blockquote>/g, '</div>')
+                                    .replace(/<p>/g, '<div class="frizk-block" contenteditable="true" data-type="p" data-placeholder="Press \'/\' for commands...">')
+                                    .replace(/<\/p>/g, '</div>') 
+                                %>
+                            <% } %>
                         </div>
-                    </form>
+                        
+                        <!-- Menu Slash Pop-up -->
+                        <div id="slash-menu" class="slash-menu">
+                            <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; padding-left: 0.5rem; text-transform: uppercase; font-weight: bold;">Basic Blocks</div>
+                            <div class="slash-item" data-action="p"><div class="slash-item-icon">P</div> Text</div>
+                            <div class="slash-item" data-action="h1"><div class="slash-item-icon">H1</div> Heading 1</div>
+                            <div class="slash-item" data-action="h2"><div class="slash-item-icon">H2</div> Heading 2</div>
+                            <div class="slash-item" data-action="quote"><div class="slash-item-icon">"</div> Quote</div>
+                        </div>
+
+                        <!-- Data asli disimpan di sini sebelum dikirim ke backend -->
+                        <input type="hidden" id="hidden-content" name="content" value="<%= post.content || '' %>">
+                    </div>
                 </div>
-            </main>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const editor = document.getElementById('frizk-editor');
-                    const hiddenInput = document.getElementById('hidden-content');
-                    const form = editor.closest('form');
-                    const slashMenu = document.getElementById('slash-menu');
-                    let currentBlock = null;
+                <!-- Sidebar Settings Column -->
+                <div>
+                    <div style="background: #F9FAFB; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius);">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem;">Publishing</h3>
+                        
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" name="status">
+                                <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+                                <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Published</option>
+                            </select>
+                        </div>
 
-                    // Fungsi membuat block baru
-                    function createBlock(type = 'p', text = '') {
-                        const block = document.createElement('div');
-                        block.contentEditable = true;
-                        block.className = 'frizk-block';
-                        block.dataset.type = type;
-                        block.dataset.placeholder = type === 'p' ? "Press '/' for commands, or type text..." : `${type.toUpperCase()}...`;
-                        block.innerHTML = text;
-                        return block;
-                    }
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; word-break: break-all;">
+                            Slug: <strong><%= post.slug %></strong>
+                        </div>
 
-                    // Event Listener untuk mengetik (Menangani Enter, Backspace, Slash)
-                    editor.addEventListener('keydown', (e) => {
-                        const block = e.target;
-                        if (!block.classList.contains('frizk-block')) return;
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update Post</button>
+                    </div>
+                </div>
 
-                        // 1. Tombol ENTER (Buat block baru di bawahnya)
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            // Jika enter di pop-up aktif, abaikan (ditangani click)
-                            if (slashMenu.classList.contains('active')) return;
+            </div>
+        </form>
+    </div>
+</main>
 
-                            const newBlock = createBlock('p');
-                            block.parentNode.insertBefore(newBlock, block.nextSibling);
-                            newBlock.focus();
-                        }
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const editor = document.getElementById('frizk-editor');
+        const hiddenInput = document.getElementById('hidden-content');
+        const form = editor.closest('form');
+        const slashMenu = document.getElementById('slash-menu');
+        let currentBlock = null;
 
-                        // 2. Tombol BACKSPACE (Hapus block jika kosong)
-                        if (e.key === 'Backspace' && block.textContent === '') {
-                            e.preventDefault();
-                            const prevBlock = block.previousElementSibling;
-                            if (prevBlock && prevBlock.classList.contains('frizk-block')) {
-                                block.remove();
-                                // Pindahkan kursor ke ujung block sebelumnya
-                                const range = document.createRange();
-                                const sel = window.getSelection();
-                                range.selectNodeContents(prevBlock);
-                                range.collapse(false);
-                                sel.removeAllRanges();
-                                sel.addRange(range);
-                                prevBlock.focus();
-                            }
-                        }
-                    });
+        function createBlock(type = 'p', text = '') {
+            const block = document.createElement('div');
+            block.contentEditable = true;
+            block.className = 'frizk-block';
+            block.dataset.type = type;
+            block.dataset.placeholder = type === 'p' ? "Press '/' for commands, or type text..." : `${type.toUpperCase()}...`;
+            block.innerHTML = text;
+            return block;
+        }
 
-                    // Event Listener khusus Input (Menangani trigger menu '/')
-                    editor.addEventListener('input', (e) => {
-                        const block = e.target;
-                        if (!block.classList.contains('frizk-block')) return;
+        editor.addEventListener('keydown', (e) => {
+            const block = e.target;
+            if (!block.classList.contains('frizk-block')) return;
 
-                        // Jika mengetik '/', tampilkan menu di dekat block
-                        if (block.textContent.trim() === '/') {
-                            currentBlock = block;
-                            slashMenu.style.top = (block.offsetTop + block.offsetHeight) + 'px';
-                            slashMenu.style.left = block.offsetLeft + 'px';
-                            slashMenu.classList.add('active');
-                        } else {
-                            slashMenu.classList.remove('active');
-                        }
-                    });
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (slashMenu.classList.contains('active')) return; 
 
-                    // Klik Item di Menu Slash
-                    document.querySelectorAll('.slash-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            const action = item.dataset.action;
-                            if (currentBlock) {
-                                currentBlock.dataset.type = action;
-                                currentBlock.textContent = ''; // Hapus slash
-                                currentBlock.dataset.placeholder = action === 'p' ? "Press '/' for commands..." : `${action.toUpperCase()}...`;
-                                slashMenu.classList.remove('active');
-                                currentBlock.focus();
-                            }
-                        });
-                    });
+                const newBlock = createBlock('p');
+                block.parentNode.insertBefore(newBlock, block.nextSibling);
+                newBlock.focus();
+            }
 
-                    // Sembunyikan menu slash jika klik di luar
-                    document.addEventListener('click', (e) => {
-                        if (!e.target.closest('#slash-menu') && !e.target.closest('.frizk-block')) {
-                            slashMenu.classList.remove('active');
-                        }
-                    });
+            if (e.key === 'Backspace' && block.textContent === '') {
+                e.preventDefault();
+                const prevBlock = block.previousElementSibling;
+                if (prevBlock && prevBlock.classList.contains('frizk-block')) {
+                    block.remove();
+                    const range = document.createRange();
+                    const sel = window.getSelection();
+                    range.selectNodeContents(prevBlock);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    prevBlock.focus();
+                }
+            }
+        });
 
-                    // FUNGSI SIMPAN: Convert block Frizk menjadi Clean HTML ke hidden input
-                    form.addEventListener('submit', () => {
-                        let cleanHTML = '';
-                        editor.querySelectorAll('.frizk-block').forEach(block => {
-                            const type = block.dataset.type;
-                            const text = block.innerHTML.trim(); // ambil format bold/italic bawaan contenteditable
-                            if (text !== '' && text !== '<br>') {
-                                if (type === 'p') cleanHTML += `<p>${text}</p>`;
-                                if (type === 'h1') cleanHTML += `<h1>${text}</h1>`;
-                                if (type === 'h2') cleanHTML += `<h2>${text}</h2>`;
-                                if (type === 'quote') cleanHTML += `<blockquote>${text}</blockquote>`;
-                            }
-                        });
-                        hiddenInput.value = cleanHTML;
-                    });
+        editor.addEventListener('input', (e) => {
+            const block = e.target;
+            if (!block.classList.contains('frizk-block')) return;
 
-                    // Fokus ke editor saat container di klik (bagian kosong)
-                    editor.addEventListener('click', (e) => {
-                        if (e.target === editor) {
-                            const blocks = editor.querySelectorAll('.frizk-block');
-                            blocks[blocks.length - 1].focus();
-                        }
-                    });
-                });
-            </script>
+            if (block.textContent.trim() === '/') {
+                currentBlock = block;
+                slashMenu.style.top = (block.offsetTop + block.offsetHeight) + 'px';
+                slashMenu.style.left = block.offsetLeft + 'px';
+                slashMenu.classList.add('active');
+            } else {
+                slashMenu.classList.remove('active');
+            }
+        });
 
-            <%- include('../../partials/footer.ejs') %>
+        document.querySelectorAll('.slash-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const action = item.dataset.action;
+                if (currentBlock) {
+                    currentBlock.dataset.type = action;
+                    currentBlock.textContent = ''; 
+                    currentBlock.dataset.placeholder = action === 'p' ? "Press '/' for commands..." : `${action.toUpperCase()}...`;
+                    slashMenu.classList.remove('active');
+                    currentBlock.focus();
+                }
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#slash-menu') && !e.target.closest('.frizk-block')) {
+                slashMenu.classList.remove('active');
+            }
+        });
+
+        // Convert UI Editor ke bentuk HTML Database saat disimpan
+        form.addEventListener('submit', () => {
+            let cleanHTML = '';
+            editor.querySelectorAll('.frizk-block').forEach(block => {
+                const type = block.dataset.type;
+                const text = block.innerHTML.trim();
+                if (text !== '' && text !== '<br>') {
+                    if (type === 'p') cleanHTML += `<p>${text}</p>`;
+                    if (type === 'h1') cleanHTML += `<h1>${text}</h1>`;
+                    if (type === 'h2') cleanHTML += `<h2>${text}</h2>`;
+                    if (type === 'quote') cleanHTML += `<blockquote>${text}</blockquote>`;
+                }
+            });
+            // Pastikan jika kosong, setel null/kosong
+            hiddenInput.value = cleanHTML === '' ? '' : cleanHTML;
+        });
+
+        editor.addEventListener('click', (e) => {
+            if (e.target === editor) {
+                const blocks = editor.querySelectorAll('.frizk-block');
+                if(blocks.length > 0) blocks[blocks.length - 1].focus();
+            }
+        });
+    });
+</script>
+
+<%- include('../../partials/footer.ejs') %>

@@ -1,111 +1,781 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Install FrizkCMS</title>
-    <link rel="stylesheet" href="/public/admin/css/frizk-ui.css">
+    <title>Instalasi FrizkCMS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #17566A;
+            /* Deep Teal */
+            --bg-color: #F8F8F8;
+            /* Ivory Background */
+            --surface: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- Header & Progress Bar --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            position: relative;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .step-counter {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 25%;
+            transition: width 0.3s ease;
+        }
+
+        /* --- Layout --- */
+        .layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            max-width: 1000px;
+            margin: 4rem auto;
+            gap: 4rem;
+            padding: 0 2rem;
+        }
+
+        /* --- Sidebar Stepper --- */
+        .stepper {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .stepper::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 20px;
+            bottom: 20px;
+            width: 1px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active {
+            opacity: 1;
+        }
+
+        .step-item.completed {
+            opacity: 0.7;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .step-item.completed .step-circle {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .step-text h4 {
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+        }
+
+        .step-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Card Content --- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .card h1 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .card>p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Custom Styles --- */
+        .info-list {
+            list-style: none;
+            margin-bottom: 2.5rem;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .info-list li span {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .alert-box {
+            background: #F1F5F9;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+
+        /* --- Form Elements --- */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            display: block;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+            font-family: var(--font-sans);
+            color: var(--text-main);
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(18, 74, 84, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #0E3A42;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: #F1F5F9;
+            color: var(--text-main);
+        }
+
+        /* Step Logic */
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .success-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .success-row:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="frizk-card">
-        <div class="frizk-header">
-            <h1>Welcome to FrizkCMS</h1>
-            <p>Let's setup your database connection.</p>
+    <header class="top-nav">
+                <div class="brand">
+            <!-- Logo Frizk Kustom -->
+            <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Lingkaran Utama -->
+                <circle cx="50" cy="50" r="48" fill="#17566A" />
+                <!-- Cincin -->
+                <circle cx="50" cy="50" r="41" fill="none" stroke="#F2F4F3" stroke-width="2.5" />
+                <!-- Huruf F dengan Swoop Kiri -->
+                <path fill="#F2F4F3" d="
+                    M 31 22 L 31 24 C 34 24, 35 25, 35 28 L 35 72 
+                    C 35 75, 34 76, 31 76 L 31 78 L 52 78 L 52 76 
+                    C 49 76, 48 75, 48 72 L 48 53 L 57 53 
+                    C 60 53, 62 55, 63 58 L 65 58 L 64 45 L 62 45 
+                    C 61 48, 59 50, 57 50 L 48 50 
+                    C 40 50, 31 54, 27 65 C 28 58, 35 48, 48 48 
+                    L 48 28 L 63 28 C 67 28, 69 31, 70 36 
+                    L 72 36 L 70 22 Z" 
+                />
+            </svg>
+            Frizk
         </div>
+        <div class="step-counter" id="top-step-text">
+            Langkah <%= typeof success !=='undefined' && success ? '4' : '1' %> dari 4
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"
+                style="width: <%= typeof success !== 'undefined' && success ? '100%' : '25%' %>;"></div>
+        </div>
+    </header>
 
-        <form action="/install" method="POST">
-            <div class="form-group">
-                <label for="dbType">Database Driver</label>
-                <select id="dbType" name="dbType" required>
-                    <option value="sqlite">SQLite (Best for small sites & cPanel)</option>
-                    <option value="mysql">MySQL</option>
-                    <option value="postgres">PostgreSQL</option>
-                </select>
-            </div>
-
-            <!-- FITUR BARU: Table Prefix (Berlaku untuk semua DB) -->
-            <div class="form-group">
-                <label for="tablePrefix">Table Prefix</label>
-                <input type="text" id="tablePrefix" name="tablePrefix" value="frizk_" required>
-                <small style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">
-                    Example: frizk_ (Useful if multiple installations share one database)
-                </small>
-            </div>
-
-            <!-- Bagian ini akan disembunyikan jika SQLite dipilih -->
-            <div id="dbCredentials" class="hidden">
-                <div class="form-group">
-                    <label for="dbHost">Database Host</label>
-                    <input type="text" id="dbHost" name="dbHost" placeholder="127.0.0.1 or localhost">
-                </div>
-                <div class="form-group">
-                    <label for="dbPort">Database Port</label>
-                    <input type="text" id="dbPort" name="dbPort" placeholder="3306 for MySQL, 5432 for PG">
-                </div>
-                <div class="form-group">
-                    <label for="dbName">Database Name</label>
-                    <input type="text" id="dbName" name="dbName" placeholder="frizkcms_db">
-                </div>
-                <div class="form-group">
-                    <label for="dbUser">Database User</label>
-                    <input type="text" id="dbUser" name="dbUser" placeholder="root">
-                </div>
-                <div class="form-group">
-                    <label for="dbPass">Database Password</label>
-                    <input type="password" id="dbPass" name="dbPass" placeholder="••••••••">
+    <main class="layout">
+        <!-- Sidebar Stepper (4 Steps) -->
+        <aside class="stepper">
+            <div class="step-item <%= typeof success === 'undefined' ? 'active' : 'completed' %>" data-step="1"
+                id="nav-1">
+                <div class="step-circle">01</div>
+                <div class="step-text">
+                    <h4>Mulai</h4>
+                    <p>Sebelum memulai</p>
                 </div>
             </div>
-
-            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
-
-            <div class="frizk-header" style="margin-bottom: 1.5rem; text-align: left;">
-                <h2 style="font-size: 1.25rem;">Admin Account</h2>
-                <p>Create your first administrator account.</p>
+            <div class="step-item <%= typeof success !== 'undefined' ? 'completed' : '' %>" data-step="2" id="nav-2">
+                <div class="step-circle">02</div>
+                <div class="step-text">
+                    <h4>Basis data</h4>
+                    <p>Hubungkan koneksi</p>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="adminUser">Admin Username</label>
-                <input type="text" id="adminUser" name="adminUser" placeholder="admin" required>
+            <div class="step-item <%= typeof success !== 'undefined' ? 'completed' : '' %>" data-step="3" id="nav-3">
+                <div class="step-circle">03</div>
+                <div class="step-text">
+                    <h4>Situs Anda</h4>
+                    <p>Akun admin</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="adminEmail">Admin Email</label>
-                <input type="text" id="adminEmail" name="adminEmail" placeholder="admin@domain.com" required>
+            <div class="step-item <%= typeof success !== 'undefined' && success ? 'active' : '' %>" data-step="4"
+                id="nav-4">
+                <div class="step-circle">04</div>
+                <div class="step-text">
+                    <h4>Selesai</h4>
+                    <p>Siap digunakan</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="adminPass">Admin Password</label>
-                <input type="password" id="adminPass" name="adminPass" placeholder="Strong password" required>
-            </div>
+        </aside>
 
-            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Install System</button>
-        </form>
-    </div>
+        <section>
+            <!-- Jika success dari backend, TAMPILKAN PANEL 4 -->
+            <% if (typeof success !=='undefined' && success) { %>
+                <div class="card step-panel active">
+                    <p style="font-size: 0.875rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+                        Langkah 4 dari 4</p>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        style="margin-bottom: 1rem;">
+                        <circle cx="12" cy="12" r="12" fill="#124A54" />
+                        <path d="M7 12L10.5 15.5L18 8" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                    <h1>Instalasi berhasil</h1>
+                    <p>Frizk siap digunakan. Simpan kredensial berikut di tempat yang aman.</p>
 
-    <!-- Vanilla JS Interactivity -->
-    <script>
-        const dbTypeSelect = document.getElementById('dbType');
-        const dbCredentials = document.getElementById('dbCredentials');
+                    <div class="success-box">
+                        <div class="success-row">
+                            <span style="color: var(--text-muted);">Nama pengguna</span>
+                            <strong style="color: var(--text-main); font-family: monospace;">
+                                <%= adminUser %>
+                            </strong>
+                        </div>
+                        <div class="success-row">
+                            <span style="color: var(--text-muted);">Sandi</span>
+                            <span style="color: #94A3B8; font-style: italic;">Sandi yang Anda buat</span>
+                        </div>
+                    </div>
 
-        function toggleCredentials() {
-            if (dbTypeSelect.value === 'sqlite') {
-                dbCredentials.classList.add('hidden');
-                // Remove required attribute when hidden
-                document.querySelectorAll('#dbCredentials input').forEach(input => input.removeAttribute('required'));
-            } else {
-                dbCredentials.classList.remove('hidden');
-                // Add required attribute when shown
-                document.querySelectorAll('#dbCredentials input').forEach(input => input.setAttribute('required', 'true'));
+                    <div class="form-actions">
+                        <div></div> <!-- Spacing -->
+                        <a href="/admin/login" class="btn" style="text-decoration: none;">Masuk ke akun &rarr;</a>
+                    </div>
+                </div>
+                <% } else { %>
+                    <!-- JIKA BELUM INSTALL, TAMPILKAN FORM WIZARD -->
+                    <form id="installForm" action="/install" method="POST">
+
+                        <!-- STEP 1: MULAI -->
+                        <div class="card step-panel active" id="panel-1">
+                            <p
+                                style="font-size: 0.875rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+                                Langkah 1 dari 4</p>
+                            <h1>Selamat datang di Frizk</h1>
+                            <p>Sebelum memulai, siapkan lima informasi berikut dari penyedia hosting Anda. Proses
+                                pemasangan hanya membutuhkan waktu sekitar lima menit.</p>
+
+                            <ul class="info-list">
+                                <li><span>1</span> Nama basis data</li>
+                                <li><span>2</span> Nama pengguna basis data</li>
+                                <li><span>3</span> Sandi basis data</li>
+                                <li><span>4</span> Host basis data</li>
+                                <li><span>5</span> Prefiks tabel <small
+                                        style="color:var(--text-muted); margin-left: 5px;">— hanya jika satu basis data
+                                        dipakai untuk beberapa instalasi</small></li>
+                            </ul>
+
+                            <div class="alert-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <div>Berkas konfigurasi dibuat otomatis. Jika gagal, Anda tetap bisa menyalin dan
+                                    menempelkannya secara manual — prosesnya tetap mudah.</div>
+                            </div>
+
+                            <div class="form-actions" style="justify-content: flex-end;">
+                                <button type="button" class="btn" onclick="nextStep()">Mulai pemasangan &rarr;</button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: BASIS DATA -->
+                        <div class="card step-panel" id="panel-2">
+                            <p
+                                style="font-size: 0.875rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+                                Langkah 2 dari 4</p>
+                            <h1>Hubungkan ke basis data</h1>
+                            <p>Masukkan kredensial yang diberikan oleh layanan hosting Anda.</p>
+
+                            <!-- Pilihan Driver DB (Wajib ada untuk logika server) -->
+                            <div class="form-group">
+                                <label for="dbType">Jenis Database</label>
+                                <select id="dbType" name="dbType" onchange="toggleCredentials()">
+                                    <option value="sqlite">SQLite (Lokal / cPanel)</option>
+                                    <option value="mysql">MySQL / MariaDB</option>
+                                    <option value="postgres">PostgreSQL</option>
+                                </select>
+                            </div>
+
+                            <div id="dbCredentials" class="hidden">
+                                <div class="form-group">
+                                    <label for="dbName">Nama basis data</label>
+                                    <input type="text" id="dbName" name="dbName" placeholder="frizk">
+                                    <span class="help-text">Nama database yang akan digunakan Frizk.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dbUser">Nama pengguna</label>
+                                    <input type="text" id="dbUser" name="dbUser" placeholder="root">
+                                    <span class="help-text">Username basis data Anda.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dbPass">Sandi</label>
+                                    <div class="input-wrapper">
+                                        <input type="password" id="dbPass" name="dbPass" placeholder="sandi">
+                                        <button type="button" class="toggle-password"
+                                            onclick="togglePass('dbPass', this)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                            <span>Tampilkan</span>
+                                        </button>
+                                    </div>
+                                    <span class="help-text">Sandi basis data Anda.</span>
+                                </div>
+                            </div> <!-- End hidden DB Creds -->
+
+                            <div class="grid-2">
+                                <div class="form-group">
+                                    <label for="dbHost">Host basis data</label>
+                                    <input type="text" id="dbHost" name="dbHost" value="localhost">
+                                    <span class="help-text">Biasanya localhost. Jika tidak berfungsi, tanyakan ke
+                                        hosting Anda.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tablePrefix">Prefiks tabel</label>
+                                    <input type="text" id="tablePrefix" name="tablePrefix" value="wp_" required>
+                                    <span class="help-text">Ubah jika beberapa instalasi memakai satu basis data.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep()">&larr;
+                                    Kembali</button>
+                                <button type="button" class="btn" onclick="nextStep()">Lanjutkan &rarr;</button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: SITUS ANDA -->
+                        <div class="card step-panel" id="panel-3">
+                            <p
+                                style="font-size: 0.875rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">
+                                Langkah 3 dari 4</p>
+                            <h1>Siapkan situs Anda</h1>
+                            <p>Atur judul dan akun admin pertama. Semua ini bisa diubah lagi nanti.</p>
+
+                            <div class="form-group">
+                                <label for="siteTitle">Judul situs</label>
+                                <input type="text" id="siteTitle" name="siteTitle" placeholder="FRIZK">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminUser">Nama pengguna</label>
+                                <input type="text" id="adminUser" name="adminUser" placeholder="frizk" required>
+                                <span class="help-text">Huruf, angka, spasi, garis bawah, tanda minus, titik, dan simbol
+                                    @.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminPass">Sandi</label>
+                                <div class="input-wrapper">
+                                    <input type="password" id="adminPass" name="adminPass" placeholder="frizk" required
+                                        oninput="checkStrength(this.value)">
+                                    <button type="button" class="toggle-password"
+                                        onclick="togglePass('adminPass', this)">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                        <span>Tampilkan</span>
+                                    </button>
+                                </div>
+                                <div style="display: flex; gap: 4px; margin-top: 8px;">
+                                    <div id="str-1"
+                                        style="height: 4px; flex: 1; background: var(--border); border-radius: 2px;">
+                                    </div>
+                                    <div id="str-2"
+                                        style="height: 4px; flex: 1; background: var(--border); border-radius: 2px;">
+                                    </div>
+                                    <div id="str-3"
+                                        style="height: 4px; flex: 1; background: var(--border); border-radius: 2px;">
+                                    </div>
+                                    <div id="str-4"
+                                        style="height: 4px; flex: 1; background: var(--border); border-radius: 2px;">
+                                    </div>
+                                </div>
+                                <span class="help-text" id="str-text" style="text-align: right; margin-top: 4px;">Belum
+                                    diisi</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminEmail">Email Anda</label>
+                                <input type="email" id="adminEmail" name="adminEmail" placeholder="frizk@gmail.com"
+                                    required>
+                                <span class="help-text">Pastikan alamat ini benar sebelum melanjutkan.</span>
+                            </div>
+
+                            <div style="display: flex; gap: 0.5rem; align-items: flex-start; margin-top: 1.5rem;">
+                                <input type="checkbox" id="hideSearch" style="width: auto; margin-top: 4px;">
+                                <label for="hideSearch" style="font-weight: 400; color: var(--text-main);">Sembunyikan
+                                    situs ini dari mesin pencari sampai saya siap</label>
+                            </div>
+
+                            <!-- Error Banner (Jika instalasi gagal dari server) -->
+                            <% if (typeof error !=='undefined' ) { %>
+                                <div
+                                    style="background: #FEE2E2; color: #991B1B; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.875rem;">
+                                    <b>Instalasi Gagal:</b>
+                                    <%= error %>
+                                </div>
+                                <% } %>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-outline" onclick="prevStep()">&larr;
+                                            Kembali</button>
+                                        <button type="submit" class="btn" id="installBtn"
+                                            onclick="loadingState()">Instal Frizk &rarr;</button>
+                                    </div>
+                        </div>
+                    </form>
+                    <% } %>
+        </section>
+    </main>
+
+    <% if (typeof success==='undefined' || !success) { %>
+        <script>
+            let currentStep = <%= typeof error !== 'undefined' ? 3 : 1 %>; // Kembali ke step 3 jika error
+            const totalSteps = 4;
+
+            function updateUI() {
+                document.querySelectorAll('.step-item').forEach((item, index) => {
+                    const stepNum = index + 1;
+                    item.classList.remove('active', 'completed');
+                    if (stepNum === currentStep) item.classList.add('active');
+                    if (stepNum < currentStep) item.classList.add('completed');
+                });
+
+                document.querySelectorAll('.step-panel').forEach((panel, index) => {
+                    panel.classList.remove('active');
+                    if (index + 1 === currentStep) panel.classList.add('active');
+                });
+
+                document.getElementById('top-step-text').innerText = `Langkah ${currentStep} dari ${totalSteps}`;
+                document.getElementById('progress-bar').style.width = `${(currentStep / totalSteps) * 100}%`;
             }
-        }
 
-        // Jalankan saat pertama dimuat
-        toggleCredentials();
+            function nextStep() {
+                const currentPanel = document.getElementById(`panel-${currentStep}`);
+                const inputs = currentPanel.querySelectorAll('input[required]');
+                let isValid = true;
 
-        // Jalankan saat pilihan diubah
-        dbTypeSelect.addEventListener('change', toggleCredentials);
-    </script>
+                inputs.forEach(input => {
+                    if (input.closest('.hidden')) return;
+                    if (!input.value) {
+                        input.style.borderColor = '#EF4444';
+                        isValid = false;
+                    } else {
+                        input.style.borderColor = 'var(--border)';
+                    }
+                });
+
+                if (isValid && currentStep < 3) {
+                    currentStep++;
+                    updateUI();
+                }
+            }
+
+            function prevStep() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateUI();
+                }
+            }
+
+            function toggleCredentials() {
+                const dbType = document.getElementById('dbType').value;
+                const dbCreds = document.getElementById('dbCredentials');
+                const dbHost = document.getElementById('dbHost');
+
+                if (dbType === 'sqlite') {
+                    dbCreds.classList.add('hidden');
+                    dbCreds.querySelectorAll('input').forEach(input => input.removeAttribute('required'));
+                    dbHost.closest('.form-group').classList.add('hidden');
+                } else {
+                    dbCreds.classList.remove('hidden');
+                    dbCreds.querySelectorAll('input').forEach(input => input.setAttribute('required', 'true'));
+                    dbHost.closest('.form-group').classList.remove('hidden');
+                }
+            }
+
+            function togglePass(inputId, btn) {
+                const input = document.getElementById(inputId);
+                const span = btn.querySelector('span');
+                if (input.type === 'password') {
+                    input.type = 'text'; span.innerText = 'Sembunyikan';
+                } else {
+                    input.type = 'password'; span.innerText = 'Tampilkan';
+                }
+            }
+
+            function checkStrength(val) {
+                const bars = [document.getElementById('str-1'), document.getElementById('str-2'), document.getElementById('str-3'), document.getElementById('str-4')];
+                const text = document.getElementById('str-text');
+                bars.forEach(b => b.style.background = 'var(--border)');
+
+                if (!val) { text.innerText = 'Belum diisi'; return; }
+                if (val.length < 5) { bars[0].style.background = '#EF4444'; text.innerText = 'Sangat Lemah'; return; }
+                if (val.length >= 5 && val.length < 8) { bars[0].style.background = '#F59E0B'; bars[1].style.background = '#F59E0B'; text.innerText = 'Lemah'; return; }
+                if (val.length >= 8) { bars[0].style.background = '#10B981'; bars[1].style.background = '#10B981'; bars[2].style.background = '#10B981'; text.innerText = 'Kuat'; }
+                if (val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val)) { bars[3].style.background = '#10B981'; text.innerText = 'Sangat Kuat'; }
+            }
+
+            function loadingState() {
+                const btn = document.getElementById('installBtn');
+                if (document.getElementById('adminUser').value && document.getElementById('adminPass').value) {
+                    btn.innerHTML = 'Memproses...';
+                    btn.style.opacity = '0.8';
+                    btn.style.pointerEvents = 'none';
+                }
+            }
+
+            toggleCredentials();
+            updateUI();
+        </script>
+        <% } %>
 </body>
 
 </html>
