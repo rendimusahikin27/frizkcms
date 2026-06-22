@@ -1,30 +1,258 @@
 <aside class="frizk-sidebar">
-    <nav class="sidebar-nav">
-        <!-- Dashboard -->
-        <a href="/admin" class="nav-item <%= typeof path !== 'undefined' && path === '/admin' ? 'active' : '' %>">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
-            Dasbor
-        </a>
-        <!-- Posts -->
-        <a href="/admin/posts" class="nav-item <%= typeof path !== 'undefined' && path.startsWith('/admin/posts') ? 'active' : '' %>">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            Artikel
-        </a>
-        <!-- Settings -->
-        <a href="/admin/settings" class="nav-item <%= typeof path !== 'undefined' && path === '/admin/settings' ? 'active' : '' %>">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Pengaturan
-        </a>
-    </nav>
+    <ul class="fz-menu">
+        
+        <!-- DASBOR -->
+        <!-- Buka & aktifkan jika path-nya adalah '/admin' -->
+        <li class="fz-has-submenu <%= typeof path !== 'undefined' && path === '/admin' ? 'open' : '' %>" data-menu-title="Dasbor">
+            <div class="fz-menu-item <%= typeof path !== 'undefined' && path === '/admin' ? 'active' : '' %>" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    </span>
+                    <span>Dasbor</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="/admin" class="<%= typeof path !== 'undefined' && path === '/admin' ? 'current' : '' %>">Beranda</a></li>
+                <li><a href="#">Pembaruan <span class="fz-badge">1</span></a></li>
+            </ul>
+        </li>
 
-    <div class="sidebar-footer">
-        <div class="user-info">
-            <span class="user-name"><%= user.username %></span>
-            <span class="user-role"><%= user.role %></span>
-        </div>
-        <a href="/admin/logout" class="nav-item text-danger">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-            Keluar
-        </a>
+        <li class="fz-menu-separator"></li>
+
+        <!-- POS -->
+        <!-- Buka & aktifkan jika path dimulai dengan '/admin/posts' -->
+        <li class="fz-has-submenu <%= typeof path !== 'undefined' && path.startsWith('/admin/posts') ? 'open' : '' %>" data-menu-title="Pos">
+            <div class="fz-menu-item <%= typeof path !== 'undefined' && path.startsWith('/admin/posts') ? 'active' : '' %>" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </span>
+                    <span>Pos</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="/admin/posts" class="<%= typeof path !== 'undefined' && path === '/admin/posts' ? 'current' : '' %>">Semua Pos</a></li>
+                <li><a href="/admin/posts/new" class="<%= typeof path !== 'undefined' && path === '/admin/posts/new' ? 'current' : '' %>">Tambah Pos</a></li>
+                <li><a href="#">Kategori</a></li>
+                <li><a href="#">Tag</a></li>
+            </ul>
+        </li>
+
+        <!-- MEDIA -->
+        <li class="fz-has-submenu" data-menu-title="Media">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    </span>
+                    <span>Media</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Pustaka Media</a></li>
+                <li><a href="#">Tambah Baru</a></li>
+            </ul>
+        </li>
+
+        <!-- LAMAN -->
+        <li class="fz-has-submenu" data-menu-title="Laman">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    </span>
+                    <span>Laman</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Semua Laman</a></li>
+                <li><a href="#">Tambah Laman</a></li>
+            </ul>
+        </li>
+
+        <!-- KOMENTAR -->
+        <li>
+            <a href="#" class="fz-menu-item">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    </span>
+                    <span>Komentar</span>
+                </div>
+                <span class="fz-badge blue">0</span>
+            </a>
+        </li>
+
+        <li class="fz-menu-separator"></li>
+
+        <!-- TAMPILAN -->
+        <li class="fz-has-submenu" data-menu-title="Tampilan">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 9h9l-7.5 5.5L18 22l-6-4.5L6 22l1.5-5.5L0 11h9z"></path></svg>
+                    </span>
+                    <span>Tampilan</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Tema</a></li>
+                <li><a href="#">Editor</a></li>
+                <li><a href="#">Font</a></li>
+            </ul>
+        </li>
+
+        <!-- PLUGIN -->
+        <li class="fz-has-submenu" data-menu-title="Plugin">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-1.12-2.5-2.5-2.5S6 10.62 6 12s1.12 2.5 2.5 2.5z"></path><path d="M2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"></path></svg>
+                    </span>
+                    <span>Plugin</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Plugin Terpasang</a></li>
+                <li><a href="#">Tambah Baru</a></li>
+            </ul>
+        </li>
+
+        <!-- PENGGUNA -->
+        <li class="fz-has-submenu" data-menu-title="Pengguna">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </span>
+                    <span>Pengguna</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Semua Pengguna</a></li>
+                <li><a href="#">Tambah Baru</a></li>
+                <li><a href="#">Profil Saya</a></li>
+            </ul>
+        </li>
+
+        <!-- PERALATAN -->
+        <li class="fz-has-submenu" data-menu-title="Peralatan">
+            <div class="fz-menu-item" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    </span>
+                    <span>Peralatan</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="#">Impor / Ekspor</a></li>
+                <li><a href="#">Kesehatan Situs</a></li>
+            </ul>
+        </li>
+
+        <!-- PENGATURAN -->
+        <!-- Buka & aktifkan jika path dimulai dengan '/admin/settings' -->
+        <li class="fz-has-submenu <%= typeof path !== 'undefined' && path.startsWith('/admin/settings') ? 'open' : '' %>" data-menu-title="Pengaturan">
+            <div class="fz-menu-item <%= typeof path !== 'undefined' && path.startsWith('/admin/settings') ? 'active' : '' %>" onclick="toggleMenu(this)">
+                <div class="fz-menu-item-left">
+                    <span class="fz-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </span>
+                    <span>Pengaturan</span>
+                </div>
+                <span class="fz-chevron">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </span>
+            </div>
+            <ul class="fz-submenu">
+                <li><a href="/admin/settings" class="<%= typeof path !== 'undefined' && path === '/admin/settings' ? 'current' : '' %>">Profil Saya</a></li>
+                <li><a href="#">Umum</a></li>
+                <li><a href="#">Membaca</a></li>
+                <li><a href="#">Permalink</a></li>
+            </ul>
+        </li>
+
+    </ul>
+
+    <!-- Tombol Tutup Menu (Collapse) -->
+    <div class="collapse-btn" onclick="toggleSidebar()">
+        <span class="fz-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </span>
+        <span>Tutup menu</span>
     </div>
 </aside>
+
+<!-- Skrip Vanilla JS untuk Efek Sidebar -->
+<script>
+    function toggleMenu(element) {
+        // Jangan buka/tutup submenu saat sidebar dalam mode mini
+        const layout = document.querySelector('.frizk-layout');
+        if(layout.classList.contains('collapsed')) return;
+
+        const parentLi = element.parentElement;
+        const isOpen = parentLi.classList.contains('open');
+
+        if (isOpen) {
+            parentLi.classList.remove('open');
+        } else {
+            parentLi.classList.add('open');
+        }
+    }
+
+    function toggleSidebar() {
+        const layout = document.querySelector('.frizk-layout');
+        layout.classList.toggle('collapsed');
+        
+        // Simpan state di LocalStorage & bersihkan menu yang terbuka
+        if (layout.classList.contains('collapsed')) {
+            localStorage.setItem('sidebarState', 'collapsed');
+            document.querySelectorAll('.fz-has-submenu.open').forEach(el => el.classList.remove('open'));
+        } else {
+            localStorage.setItem('sidebarState', 'expanded');
+            
+            // Re-open menu aktif jika diperbesar lagi
+            const currentActive = document.querySelector('.fz-menu-item.active');
+            if(currentActive) {
+                currentActive.parentElement.classList.add('open');
+            }
+        }
+    }
+
+    // Pengecekan saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        const layout = document.querySelector('.frizk-layout');
+        const savedState = localStorage.getItem('sidebarState');
+        
+        if (savedState === 'collapsed') {
+            layout.classList.add('collapsed');
+            document.querySelectorAll('.fz-has-submenu.open').forEach(el => el.classList.remove('open'));
+        }
+    });
+</script>

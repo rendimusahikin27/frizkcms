@@ -4,31 +4,31 @@
 
 :root {
     /* Palet Warna Frizk (Deep Teal & Ivory) */
-    --primary: #17566A;    
+    --primary: #17566A;
     --primary-hover: #114252;
-    --bg-color: #F8F8F8;   
+    --bg-color: #F8F8F8;
     --surface-color: #FFFFFF;
     --off-white: #F2F4F3;
-    
+
     /* Warna Teks & Border */
     --text-main: #1E293B;
     --text-muted: #64748B;
     --border-color: #E2E8F0;
-    
+
     /* Efek & Radius */
     --radius: 12px;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.03);
-    
+
     /* Tipografi */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-serif: 'Merriweather', serif;
 }
 
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -42,108 +42,178 @@ body {
    FORM ELEMENTS & BUTTONS
    ========================================================================== */
 
-.form-group { margin-bottom: 1.25rem; }
-
-label { 
-    display: block; 
-    font-size: 0.875rem; 
-    font-weight: 600; 
-    margin-bottom: 0.5rem; 
-    color: var(--text-main); 
+.form-group {
+    margin-bottom: 1.25rem;
 }
 
-input[type="text"], input[type="password"], input[type="email"], select, textarea {
-    width: 100%; 
-    padding: 0.75rem 1rem; 
+label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px; 
-    font-size: 0.95rem; 
+    border-radius: 8px;
+    font-size: 0.95rem;
     background-color: var(--surface-color);
-    transition: all 0.2s ease; 
-    outline: none; 
+    transition: all 0.2s ease;
+    outline: none;
     font-family: var(--font-sans);
 }
 
-input:focus, select:focus, textarea:focus { 
-    border-color: var(--primary); 
-    box-shadow: 0 0 0 3px rgba(23, 86, 106, 0.1); 
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(23, 86, 106, 0.1);
 }
 
 .btn {
-    display: inline-flex; 
-    justify-content: center; 
+    display: inline-flex;
+    justify-content: center;
     align-items: center;
-    padding: 0.75rem 1.25rem; 
-    font-size: 0.95rem; 
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    border-radius: 8px; 
-    cursor: pointer; 
-    transition: background-color 0.2s ease; 
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
     border: none;
     font-family: var(--font-sans);
 }
 
-.btn-primary { background-color: var(--primary); color: var(--off-white); }
-.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--off-white);
+}
 
-.btn-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
 
-.hidden { display: none !important; }
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.hidden {
+    display: none !important;
+}
 
 /* ==========================================================================
    MASTER NAVBAR (FRIZK MODERN STYLE)
    ========================================================================== */
 
 #frizk-admin-bar {
-    position: fixed; 
-    top: 0; left: 0; width: 100%; height: 52px; /* Lebih lega dari WP */
-    background-color: var(--primary); /* Deep Teal */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 52px;
+    /* Lebih lega dari WP */
+    background-color: var(--primary);
+    /* Deep Teal */
     color: var(--off-white);
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 13.5px; font-family: var(--font-sans);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    font-family: var(--font-sans);
     padding: 0 1rem;
     z-index: 99999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-#frizk-admin-bar a { color: var(--off-white); text-decoration: none; }
-#frizk-admin-bar .ab-group { display: flex; height: 100%; align-items: center; gap: 4px; }
+#frizk-admin-bar a {
+    color: var(--off-white);
+    text-decoration: none;
+}
+
+#frizk-admin-bar .ab-group {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 4px;
+}
 
 /* Item Wrapper */
-.ab-item-wrapper { position: relative; height: 100%; display: flex; align-items: center; }
+.ab-item-wrapper {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
 
 /* Pill-shaped Hover (Ciri khas modern, bukan kotak kaku) */
 .ab-item {
-    display: flex; align-items: center; gap: 8px; 
-    padding: 0 14px; height: 38px; /* Tidak full height */
-    border-radius: 8px; /* Bentuk kapsul/pill */
-    transition: background 0.2s, transform 0.1s; cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    height: 38px;
+    /* Tidak full height */
+    border-radius: 8px;
+    /* Bentuk kapsul/pill */
+    transition: background 0.2s, transform 0.1s;
+    cursor: pointer;
     font-weight: 500;
 }
-.ab-item:hover, .ab-item-wrapper:hover > .ab-item { 
-    background-color: rgba(255, 255, 255, 0.12); /* Efek kaca transparan */
+
+.ab-item:hover,
+.ab-item-wrapper:hover>.ab-item {
+    background-color: rgba(255, 255, 255, 0.12);
+    /* Efek kaca transparan */
 }
 
 /* Tombol Aksi Utama (Tulis Artikel) */
-.ab-item.action-btn { background-color: var(--off-white); color: var(--primary); }
-.ab-item.action-btn:hover { background-color: #FFFFFF; transform: translateY(-1px); }
+.ab-item.action-btn {
+    background-color: var(--off-white);
+    color: var(--primary);
+}
+
+.ab-item.action-btn:hover {
+    background-color: #FFFFFF;
+    transform: translateY(-1px);
+}
 
 /* Ikon di Navbar */
-.ab-icon { display: flex; align-items: center; justify-content: center; opacity: 0.85; }
-.ab-item:hover .ab-icon { opacity: 1; }
-.ab-item.action-btn .ab-icon { opacity: 1; }
+.ab-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
+}
+
+.ab-item:hover .ab-icon {
+    opacity: 1;
+}
+
+.ab-item.action-btn .ab-icon {
+    opacity: 1;
+}
 
 /* Floating Light Dropdown (Beda total dengan WP) */
 .ab-submenu {
-    display: none; 
-    position: absolute; 
-    top: 60px; /* Jarak visual dari navbar */
-    left: 0; 
-    background-color: var(--surface-color); /* Putih bersih */
+    display: none;
+    position: absolute;
+    top: 60px;
+    /* Jarak visual dari navbar */
+    left: 0;
+    background-color: var(--surface-color);
+    /* Putih bersih */
     border: 1px solid var(--border-color);
     min-width: 200px;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     flex-direction: column;
     padding: 6px;
     animation: dropIn 0.2s ease forwards;
@@ -154,97 +224,375 @@ input:focus, select:focus, textarea:focus {
 .ab-item-wrapper::after {
     content: '';
     position: absolute;
-    top: 100%; /* Mulai dari batas bawah navbar */
+    top: 100%;
+    /* Mulai dari batas bawah navbar */
     left: 0;
     width: 100%;
-    height: 20px; /* Tinggi celah/gap menuju dropdown */
+    height: 20px;
+    /* Tinggi celah/gap menuju dropdown */
     display: none;
 }
 
 /* Tampilkan jembatan dan submenu saat dihover */
 .ab-item-wrapper:hover::after,
-.ab-item-wrapper:hover .ab-submenu { 
-    display: flex; 
+.ab-item-wrapper:hover .ab-submenu {
+    display: flex;
 }
 
 /* Segitiga Penunjuk di atas dropdown */
 .ab-submenu::before {
-    content: ''; 
-    position: absolute; 
-    top: -6px; 
+    content: '';
+    position: absolute;
+    top: -6px;
     left: 24px;
-    width: 10px; 
-    height: 10px; 
+    width: 10px;
+    height: 10px;
     background: var(--surface-color);
-    transform: rotate(45deg); 
+    transform: rotate(45deg);
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
     z-index: -1;
 }
 
-.ab-submenu.right-align { left: auto; right: 0; }
-.ab-submenu.right-align::before { left: auto; right: 24px; }
+.ab-submenu.right-align {
+    left: auto;
+    right: 0;
+}
+
+.ab-submenu.right-align::before {
+    left: auto;
+    right: 24px;
+}
 
 /* Item di dalam Dropdown (Warna gelap) */
 .ab-submenu a {
-    padding: 10px 14px; 
-    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     border-radius: 8px;
-    transition: background 0.1s; 
-    color: var(--text-main) !important; /* Override warna navbar */
+    transition: background 0.1s;
+    color: var(--text-main) !important;
+    /* Override warna navbar */
 }
-.ab-submenu a:hover { background-color: var(--bg-color); color: var(--primary) !important; }
+
+.ab-submenu a:hover {
+    background-color: var(--bg-color);
+    color: var(--primary) !important;
+}
 
 /* Avatar Mini */
 .ab-avatar {
-    width: 24px; height: 24px; border-radius: 50%; 
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     background: var(--off-white);
-    color: var(--primary); 
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-family: var(--font-serif); font-size: 11px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: var(--font-serif);
+    font-size: 11px;
 }
 
 /* ==========================================================================
-   DASHBOARD LAYOUT & SIDEBAR
+   DASHBOARD LAYOUT & COLLAPSIBLE SIDEBAR
    ========================================================================== */
 
-.frizk-layout { 
-    display: flex; min-height: 100vh; width: 100%; 
-    padding-top: 52px; /* Sesuaikan dengan tinggi navbar baru */
+.frizk-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    padding-top: 52px;
 }
+
+/* Sidebar Utama */
 .frizk-sidebar {
-    top: 52px; height: calc(100vh - 52px); 
-    width: 250px; 
-    background-color: var(--surface-color); 
+    width: 260px;
+    background-color: var(--surface-color);
     border-right: 1px solid var(--border-color);
-    display: flex; flex-direction: column; padding: 2rem 1rem;
-    position: fixed; top: 40px; height: calc(100vh - 40px); z-index: 100;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 52px;
+    height: calc(100vh - 52px);
+    z-index: 100;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.3s ease;
+    /* Animasi mulus saat collapse */
 }
 
-.sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; gap: 0.5rem; }
-
-.nav-item {
-    display: flex; align-items: center; gap: 0.75rem; 
-    padding: 0.75rem 1rem; color: var(--text-muted);
-    text-decoration: none; border-radius: 8px; 
-    font-size: 0.95rem; font-weight: 500; transition: all 0.2s ease;
+.frizk-sidebar::-webkit-scrollbar {
+    width: 4px;
 }
 
-.nav-item:hover { background-color: var(--bg-color); color: var(--primary); }
-.nav-item.active { background-color: rgba(23, 86, 106, 0.08); color: var(--primary); font-weight: 600; }
-.nav-item.text-danger { color: #DC2626; margin-top: 0.5rem; }
-.nav-item.text-danger:hover { background-color: #FEE2E2; }
+.frizk-sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
 
-/* Profil Footer Sidebar */
-.sidebar-footer { border-top: 1px solid var(--border-color); padding-top: 1.5rem; }
-.user-info { padding: 0 1rem; display: flex; flex-direction: column; }
-.user-name { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
-.user-role { font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 4px; }
+/* Wrapper Menu Utama */
+.fz-menu {
+    list-style: none;
+    padding: 1rem 0.75rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+}
 
-/* Main Content Area */
-.frizk-main { flex-grow: 1; margin-left: 250px; display: flex; flex-direction: column; }
-.frizk-content { padding: 3rem 4rem; max-width: 1200px; width: 100%; margin: 0 auto; }
-.page-title { font-family: var(--font-serif); font-size: 2rem; color: var(--text-main); margin-bottom: 1.5rem; }
+.fz-menu-separator {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 8px 0;
+}
+
+.fz-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    color: var(--text-main);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+    /* Mencegah teks turun saat sidebar mengecil */
+}
+
+.fz-menu-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fz-menu-item:hover,
+.fz-has-submenu.open>.fz-menu-item {
+    background-color: rgba(23, 86, 106, 0.08);
+    color: var(--primary);
+}
+
+.fz-menu-item.active {
+    background-color: var(--primary);
+    color: var(--off-white);
+}
+
+.fz-icon {
+    opacity: 0.7;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.fz-menu-item:hover .fz-icon,
+.fz-has-submenu.open .fz-icon {
+    opacity: 1;
+}
+
+.fz-chevron {
+    transition: transform 0.2s ease;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.fz-has-submenu.open .fz-chevron {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.fz-submenu {
+    list-style: none;
+    padding: 0 0 0 44px;
+    margin: 4px 0 0 0;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.fz-has-submenu.open .fz-submenu {
+    display: flex;
+    animation: slideDown 0.2s ease forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fz-submenu a {
+    display: block;
+    padding: 6px 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: color 0.1s;
+    white-space: nowrap;
+}
+
+.fz-submenu a:hover {
+    color: var(--primary);
+    background-color: var(--bg-color);
+}
+
+.fz-submenu a.current {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.fz-badge {
+    background-color: #D63638;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: auto;
+}
+
+.fz-badge.blue {
+    background-color: var(--primary);
+}
+
+/* Tombol Collapse di Bawah Sidebar */
+.collapse-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    background: var(--surface-color);
+    white-space: nowrap;
+}
+
+.collapse-btn:hover {
+    color: var(--primary);
+    background: var(--bg-color);
+}
+
+/* ==========================================================================
+   STATE: MINI SIDEBAR (COLLAPSED)
+   ========================================================================== */
+
+/* Perkecil lebar sidebar */
+.frizk-layout.collapsed .frizk-sidebar { 
+    width: 64px; 
+    overflow: visible; /* Penting! Agar popup/tooltip bisa keluar dari kotak sidebar */
+}
+
+/* Sembunyikan semua teks di Sidebar */
+.frizk-layout.collapsed .fz-menu-item-left { 
+    width: 100%;
+    justify-content: center; /* Ikon ke tengah */
+}
+/* Hilangkan teks dari menu utama */
+.frizk-layout.collapsed .fz-menu-item-left > span:not(.fz-icon),
+.frizk-layout.collapsed .fz-menu-item-left > text { 
+    display: none; 
+}
+/* Sembunyikan elemen dekoratif lainnya */
+.frizk-layout.collapsed .fz-chevron,
+.frizk-layout.collapsed .fz-badge { 
+    display: none; 
+}
+
+/* Tombol Tutup Menu (Di Bawah) */
+.frizk-layout.collapsed .collapse-btn {
+    justify-content: center;
+    padding: 16px 0;
+}
+.frizk-layout.collapsed .collapse-btn span:not(.fz-icon) { display: none; }
+.frizk-layout.collapsed .collapse-btn .fz-icon svg { transform: rotate(180deg); }
+
+/* --------------------------------------------------------
+   EFEK HOVER (POP-UP) SAAT MODE MINI SIDEBAR
+   -------------------------------------------------------- */
+
+/* Sembunyikan submenu default saat mode mini */
+.frizk-layout.collapsed .fz-has-submenu .fz-submenu { 
+    display: none !important; 
+}
+
+/* Menjadikan parent sebagai patokan posisi pop-up */
+.frizk-layout.collapsed .fz-has-submenu {
+    position: relative;
+}
+
+/* Kotak Pop-up Melayang di Sebelah Kanan Ikon */
+.frizk-layout.collapsed .fz-has-submenu:hover::after {
+    content: attr(data-menu-title); /* Akan mengambil teks dari atribut HTML */
+    position: absolute;
+    left: 64px; /* Lebar mini sidebar */
+    top: 0;
+    background-color: var(--primary); /* Deep Teal */
+    color: var(--off-white);
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border-radius: 0 8px 8px 0; /* Bulat di sisi kanan saja */
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    animation: popIn 0.2s ease forwards;
+    pointer-events: none; /* Agar tidak mengganggu klik */
+}
+
+/* Kasus khusus untuk menu tanpa atribut data-title (contoh: Komentar) */
+.frizk-layout.collapsed .fz-menu > li:not(.fz-has-submenu):not(.fz-menu-separator) {
+    position: relative;
+}
+.frizk-layout.collapsed .fz-menu > li:not(.fz-has-submenu):not(.fz-menu-separator):hover::after {
+    content: "Komentar"; /* Karena hanya komentar yang tidak punya submenu */
+    position: absolute; left: 64px; top: 0;
+    background-color: var(--primary); color: var(--off-white);
+    padding: 10px 16px; font-size: 0.9rem; font-weight: 500;
+    border-radius: 0 8px 8px 0; box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    animation: popIn 0.2s ease forwards;
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==========================================================================
+   MAIN CONTENT AREA (Menyesuaikan Sidebar)
+   ========================================================================== */
+.frizk-main { 
+    flex-grow: 1; 
+    margin-left: 260px; /* Lebar default sidebar */
+    display: flex; 
+    flex-direction: column; 
+    transition: margin-left 0.3s ease; 
+}
+.frizk-layout.collapsed .frizk-main { 
+    margin-left: 64px; /* Geser jika sidebar mini */
+}
+
+.frizk-content { 
+    padding: 2.5rem 3rem; 
+    max-width: 1200px; 
+    width: 100%; 
+    margin: 0 auto; 
+}
 
 /* ==========================================================================
    FRIZKBLOCK EDITOR (Notion-style Rich Text)
@@ -266,17 +614,43 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Typography berdasarkan tipe block */
-.frizk-block[data-type="p"] { font-size: 1.125rem; color: var(--text-main); }
-.frizk-block[data-type="h1"] { font-size: 2.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; line-height: 1.2; letter-spacing: -0.025em; }
-.frizk-block[data-type="h2"] { font-size: 1.875rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; letter-spacing: -0.025em; }
-.frizk-block[data-type="quote"] { font-size: 1.25rem; font-style: italic; border-left: 4px solid var(--primary); padding-left: 1.5rem; color: var(--text-muted); }
+.frizk-block[data-type="p"] {
+    font-size: 1.125rem;
+    color: var(--text-main);
+}
+
+.frizk-block[data-type="h1"] {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.frizk-block[data-type="h2"] {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.025em;
+}
+
+.frizk-block[data-type="quote"] {
+    font-size: 1.25rem;
+    font-style: italic;
+    border-left: 4px solid var(--primary);
+    padding-left: 1.5rem;
+    color: var(--text-muted);
+}
 
 /* Placeholder keren */
 .frizk-block:empty:before {
     content: attr(data-placeholder);
     color: #9CA3AF;
     pointer-events: none;
-    display: block; /* For Firefox */
+    display: block;
+    /* For Firefox */
     font-style: italic;
 }
 
@@ -292,9 +666,14 @@ input:focus, select:focus, textarea:focus {
     width: 240px;
     z-index: 1000;
     padding: 0.5rem;
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
 }
-.slash-menu.active { display: block; }
+
+.slash-menu.active {
+    display: block;
+}
+
 .slash-item {
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
@@ -306,11 +685,21 @@ input:focus, select:focus, textarea:focus {
     gap: 0.75rem;
     transition: background 0.1s ease;
 }
-.slash-item:hover, .slash-item.selected {
+
+.slash-item:hover,
+.slash-item.selected {
     background: var(--bg-color);
     color: var(--primary);
 }
+
 .slash-item-icon {
-    width: 24px; height: 24px; background: var(--border-color); border-radius: 6px;
-    display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text-main);
+    width: 24px;
+    height: 24px;
+    background: var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--text-main);
 }
