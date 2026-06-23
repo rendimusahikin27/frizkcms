@@ -1,192 +1,471 @@
-<%- include('../../partials/header.ejs') %>
-    <%- include('../../partials/topbar.ejs') %>
-        <%- include('../../partials/sidebar.ejs') %>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frizk Builder &lsaquo; Tambah Pos</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #17566A;    
+            --primary-hover: #114252;
+            --bg-color: #F8F8F8;   
+            --surface: #FFFFFF;
+            --off-white: #F2F4F3;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --font-sans: 'Inter', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
 
-            <main class="frizk-main">
-                <div class="frizk-content">
-                    <h1 class="page-title">Write a new Post</h1>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-                    <form action="/admin/posts/new" method="POST">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        body {
+            font-family: var(--font-sans); background-color: var(--bg-color);
+            color: var(--text-main); overflow: hidden; 
+        }
 
-                            <!-- Main Content Column -->
-                            <div>
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <input type="text" id="title" name="title" placeholder="Post Title" required
-                                        style="font-size: 1.25rem; font-weight: bold; padding: 0.75rem;">
-                                </div>
+        /* --- LAYOUT UTAMA --- */
+        .frizk-builder { display: flex; height: 100vh; width: 100vw; }
 
-                                <div class="form-group" style="position: relative;">
-                                    <!-- Ini adalah elemen visual editor FrizkBlock -->
-                                    <div id="frizk-editor" class="frizk-editor-container">
-                                        <!-- Default block (Paragraf kosong pertama) -->
-                                        <div class="frizk-block" contenteditable="true" data-type="p"
-                                            data-placeholder="Press '/' for commands, or type text..."></div>
-                                    </div>
+        /* === PANEL KIRI (TOOLS & SETTINGS) === */
+        .builder-panel {
+            width: 300px; background-color: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+        }
 
-                                    <!-- Menu Pop-up Slash Command (Awalnya tersembunyi) -->
-                                    <div id="slash-menu" class="slash-menu">
-                                        <div
-                                            style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; padding-left: 0.5rem; text-transform: uppercase; font-weight: bold;">
-                                            Basic Blocks</div>
-                                        <div class="slash-item" data-action="p">
-                                            <div class="slash-item-icon">P</div> Text
-                                        </div>
-                                        <div class="slash-item" data-action="h1">
-                                            <div class="slash-item-icon">H1</div> Heading 1
-                                        </div>
-                                        <div class="slash-item" data-action="h2">
-                                            <div class="slash-item-icon">H2</div> Heading 2
-                                        </div>
-                                        <div class="slash-item" data-action="quote">
-                                            <div class="slash-item-icon">"</div> Quote
-                                        </div>
-                                    </div>
+        .panel-header {
+            background-color: var(--primary); color: var(--off-white);
+            padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-header-brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-serif); font-size: 1rem; font-weight: 700; }
+        .btn-exit { color: var(--off-white); opacity: 0.7; transition: opacity 0.2s; display: flex; }
+        .btn-exit:hover { opacity: 1; }
 
-                                    <!-- Hidden Input ini yang akan dikirim ke Backend Server.js -->
-                                    <input type="hidden" id="hidden-content" name="content">
-                                </div>
-                            </div>
+        .panel-tabs { display: flex; border-bottom: 1px solid var(--border); background-color: #F8FAFC; }
+        .tab-btn {
+            flex: 1; padding: 12px 0; border: none; background: none;
+            font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--surface); }
 
-                            <!-- Sidebar Settings Column -->
-                            <div>
-                                <div
-                                    style="background: #F9FAFB; padding: 1.5rem; border: 1px solid var(--border-color); border-radius: var(--radius);">
-                                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Publishing</h3>
+        .panel-content { flex: 1; overflow-y: auto; padding: 16px; }
+        .tab-section { display: none; }
+        .tab-section.active { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-                                    <div class="form-group">
-                                        <label for="status">Status</label>
-                                        <select id="status" name="status">
-                                            <option value="draft">Draft</option>
-                                            <option value="published">Published</option>
-                                        </select>
-                                    </div>
+        /* Grid Widget Elementor Style */
+        .widget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .widget-box {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+            cursor: grab; transition: all 0.2s;
+        }
+        .widget-box:hover { border-color: var(--primary); background: rgba(23,86,106,0.03); transform: translateY(-2px); }
+        .widget-box:active { cursor: grabbing; transform: scale(0.95); }
+        .widget-icon { color: var(--text-muted); display: flex; }
+        .widget-box:hover .widget-icon { color: var(--primary); }
+        .widget-text { font-size: 0.75rem; font-weight: 500; color: var(--text-main); pointer-events: none; }
 
-                                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Save
-                                        Post</button>
-                                </div>
-                            </div>
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); text-transform: uppercase; }
+        .form-group select {
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 0.9rem; outline: none; background: #F8FAFC;
+        }
 
-                        </div>
-                    </form>
+        .panel-footer { padding: 16px; border-top: 1px solid var(--border); background: var(--surface); }
+        .btn-publish {
+            width: 100%; padding: 12px; background: var(--primary); color: var(--off-white);
+            border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-publish:hover { background: var(--primary-hover); }
+
+        /* === SISI KANAN (KANVAS EDITOR) === */
+        .canvas-area {
+            flex: 1; background-color: var(--bg-color); overflow-y: auto;
+            display: flex; flex-direction: column; align-items: center; padding: 40px 20px;
+        }
+        .canvas-paper {
+            background: var(--surface); width: 100%; max-width: 800px; min-height: 800px;
+            padding: 60px; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid rgba(226,232,240,0.8);
+        }
+
+        .canvas-title {
+            width: 100%; border: none; outline: none; background: transparent;
+            font-family: var(--font-serif); font-size: 2.75rem; font-weight: 900;
+            color: var(--text-main); margin-bottom: 24px; line-height: 1.2; letter-spacing: -0.025em;
+        }
+        .canvas-title::placeholder { color: #CBD5E1; }
+
+        /* --- DRAG & DROP WRAAPPER (ELEMEN KUNCI) --- */
+        .frizk-editor-container { width: 100%; min-height: 300px; padding-bottom: 50px; }
+        
+        .block-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            transition: border 0.2s, background 0.2s;
+        }
+        .block-wrapper:hover {
+            border-color: rgba(23,86,106, 0.2);
+        }
+        
+        /* State Saat Di-Drag */
+        .block-wrapper.dragging {
+            opacity: 0.4;
+            background: #F1F5F9;
+        }
+
+        /* Pegangan Drag (Drag Handle) ala Elementor */
+        .drag-handle {
+            position: absolute;
+            left: -28px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+            cursor: grab;
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .block-wrapper:hover .drag-handle { opacity: 1; }
+        .drag-handle:active { cursor: grabbing; color: var(--primary); }
+
+        /* Garis Indikator Penjatuhan (Drop Indicator) */
+        #drop-indicator {
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            margin: 4px 0;
+            display: none;
+            pointer-events: none;
+            box-shadow: 0 0 8px rgba(23, 86, 106, 0.4);
+        }
+
+        /* --- BLOK TEKS --- */
+        .frizk-block {
+            outline: none; line-height: 1.8;
+            padding: 4px 8px; border-radius: 4px;
+        }
+        .frizk-block:focus { background: #F8FAFC; }
+
+        .frizk-block[data-type="p"] { font-size: 1.125rem; color: #334155; }
+        .frizk-block[data-type="h1"] { font-size: 2rem; font-weight: 700; font-family: var(--font-serif); }
+        .frizk-block[data-type="h2"] { font-size: 1.5rem; font-weight: 600; font-family: var(--font-serif); }
+        .frizk-block[data-type="quote"] { font-size: 1.25rem; font-style: italic; border-left: 4px solid var(--primary); padding-left: 1.5rem; color: var(--text-muted); font-family: var(--font-serif); }
+
+        .frizk-block:empty:after {
+            content: attr(data-placeholder);
+            color: #94A3B8; pointer-events: none; display: block; font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/admin/posts/new" method="POST" id="postForm" class="frizk-builder">
+        
+        <!-- === PANEL KIRI (TOOLS) === -->
+        <aside class="builder-panel">
+            <div class="panel-header">
+                <div class="panel-header-brand">
+                    <svg width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="48" fill="none" />
+                        <circle cx="50" cy="50" r="41" fill="none" stroke="#F2F4F3" stroke-width="3" />
+                        <path fill="#F2F4F3" d="M 31 22 L 31 24 C 34 24, 35 25, 35 28 L 35 72 C 35 75, 34 76, 31 76 L 31 78 L 52 78 L 52 76 C 49 76, 48 75, 48 72 L 48 53 L 57 53 C 60 53, 62 55, 63 58 L 65 58 L 64 45 L 62 45 C 61 48, 59 50, 57 50 L 48 50 C 40 50, 31 54, 27 65 C 28 58, 35 48, 48 48 L 48 28 L 63 28 C 67 28, 69 31, 70 36 L 72 36 L 70 22 Z"/>
+                    </svg>
+                    FrizkBuilder
                 </div>
-            </main>
+                <a href="/admin/posts" class="btn-exit" title="Keluar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </a>
+            </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const editor = document.getElementById('frizk-editor');
-                    const hiddenInput = document.getElementById('hidden-content');
-                    const form = editor.closest('form');
-                    const slashMenu = document.getElementById('slash-menu');
-                    let currentBlock = null;
+            <div class="panel-tabs">
+                <button type="button" class="tab-btn active" onclick="switchTab('elements', this)">Elemen</button>
+                <button type="button" class="tab-btn" onclick="switchTab('settings', this)">Pengaturan</button>
+            </div>
 
-                    // Fungsi membuat block baru
-                    function createBlock(type = 'p', text = '') {
-                        const block = document.createElement('div');
-                        block.contentEditable = true;
-                        block.className = 'frizk-block';
-                        block.dataset.type = type;
-                        block.dataset.placeholder = type === 'p' ? "Press '/' for commands, or type text..." : `${type.toUpperCase()}...`;
-                        block.innerHTML = text;
-                        return block;
-                    }
+            <div class="panel-content">
+                <!-- TAB ELEMEN WIDGET -->
+                <div id="tab-elements" class="tab-section active">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px;">Seret widget ke kanvas kanan.</p>
+                    
+                    <div class="widget-grid">
+                        <div class="widget-box" draggable="true" data-action="p" onclick="addBlockClick('p')">
+                            <span class="widget-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="12" x2="3" y2="12"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg></span>
+                            <span class="widget-text">Paragraf</span>
+                        </div>
+                        <div class="widget-box" draggable="true" data-action="h1" onclick="addBlockClick('h1')">
+                            <span class="widget-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h8m-8 8V4m8 16V4m5 16l3-8"></path></svg></span>
+                            <span class="widget-text">Judul Utama</span>
+                        </div>
+                        <div class="widget-box" draggable="true" data-action="h2" onclick="addBlockClick('h2')">
+                            <span class="widget-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h8m-8 8V4m8 16V4m5 16l3-8"></path></svg></span>
+                            <span class="widget-text">Subjudul</span>
+                        </div>
+                        <div class="widget-box" draggable="true" data-action="quote" onclick="addBlockClick('quote')">
+                            <span class="widget-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 11h-4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h4l-2 8z"></path><path d="M22 11h-4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h4l-2 8z"></path></svg></span>
+                            <span class="widget-text">Kutipan</span>
+                        </div>
+                    </div>
+                </div>
 
-                    // Event Listener untuk mengetik (Menangani Enter, Backspace, Slash)
-                    editor.addEventListener('keydown', (e) => {
-                        const block = e.target;
-                        if (!block.classList.contains('frizk-block')) return;
+                <!-- TAB PENGATURAN -->
+                <div id="tab-settings" class="tab-section">
+                    <div class="form-group">
+                        <label for="status">Status Penerbitan</label>
+                        <select id="status" name="status">
+                            <option value="draft">Konsep (Draft)</option>
+                            <option value="published">Diterbitkan</option>
+                        </select>
+                    </div>
+                </div>
+            </div> 
 
-                        // 1. Tombol ENTER (Buat block baru di bawahnya)
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            // Jika enter di pop-up aktif, abaikan (ditangani click)
-                            if (slashMenu.classList.contains('active')) return;
+            <div class="panel-footer">
+                <input type="hidden" id="hidden-content" name="content">
+                <button type="submit" class="btn-publish">
+                    Terbitkan
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+            
+        </aside>
 
-                            const newBlock = createBlock('p');
-                            block.parentNode.insertBefore(newBlock, block.nextSibling);
-                            newBlock.focus();
-                        }
+        <!-- === SISI KANAN (KANVAS) === -->
+        <main class="canvas-area" id="canvasScroll">
+            <div class="canvas-paper">
+                <input type="text" id="title" name="title" class="canvas-title" placeholder="Tambahkan Judul..." required autofocus autocomplete="off">
+                
+                <div id="frizk-editor" class="frizk-editor-container">
+                    <!-- Garis Indikator Penjatuhan -->
+                    <div id="drop-indicator"></div>
 
-                        // 2. Tombol BACKSPACE (Hapus block jika kosong)
-                        if (e.key === 'Backspace' && block.textContent === '') {
-                            e.preventDefault();
-                            const prevBlock = block.previousElementSibling;
-                            if (prevBlock && prevBlock.classList.contains('frizk-block')) {
-                                block.remove();
-                                // Pindahkan kursor ke ujung block sebelumnya
-                                const range = document.createRange();
-                                const sel = window.getSelection();
-                                range.selectNodeContents(prevBlock);
-                                range.collapse(false);
-                                sel.removeAllRanges();
-                                sel.addRange(range);
-                                prevBlock.focus();
-                            }
-                        }
-                    });
+                    <!-- Blok Pertama Default -->
+                    <div class="block-wrapper" draggable="true">
+                        <div class="drag-handle" title="Tahan dan geser"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="2"/><circle cx="15" cy="5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="19" r="2"/><circle cx="15" cy="19" r="2"/></svg></div>
+                        <div class="frizk-block" contenteditable="true" data-type="p" data-placeholder="Ketik teks atau seret elemen ke sini..."></div>
+                    </div>
+                </div>
+            </div>
+        </main>
 
-                    // Event Listener khusus Input (Menangani trigger menu '/')
-                    editor.addEventListener('input', (e) => {
-                        const block = e.target;
-                        if (!block.classList.contains('frizk-block')) return;
+    </form>
 
-                        // Jika mengetik '/', tampilkan menu di dekat block
-                        if (block.textContent.trim() === '/') {
-                            currentBlock = block;
-                            slashMenu.style.top = (block.offsetTop + block.offsetHeight) + 'px';
-                            slashMenu.style.left = block.offsetLeft + 'px';
-                            slashMenu.classList.add('active');
-                        } else {
-                            slashMenu.classList.remove('active');
-                        }
-                    });
+    <script>
+        const editor = document.getElementById('frizk-editor');
+        const hiddenInput = document.getElementById('hidden-content');
+        const form = document.getElementById('postForm');
+        const dropIndicator = document.getElementById('drop-indicator');
+        
+        let draggedElement = null;
+        let isWidgetDrag = false;
+        let widgetType = null;
 
-                    // Klik Item di Menu Slash
-                    document.querySelectorAll('.slash-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            const action = item.dataset.action;
-                            if (currentBlock) {
-                                currentBlock.dataset.type = action;
-                                currentBlock.textContent = ''; // Hapus slash
-                                currentBlock.dataset.placeholder = action === 'p' ? "Press '/' for commands..." : `${action.toUpperCase()}...`;
-                                slashMenu.classList.remove('active');
-                                currentBlock.focus();
-                            }
-                        });
-                    });
+        function switchTab(tabName, btnElement) {
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            btnElement.classList.add('active');
+        }
 
-                    // Sembunyikan menu slash jika klik di luar
-                    document.addEventListener('click', (e) => {
-                        if (!e.target.closest('#slash-menu') && !e.target.closest('.frizk-block')) {
-                            slashMenu.classList.remove('active');
-                        }
-                    });
+        // ==========================================
+        //  FUNGSI PEMBUATAN BLOK
+        // ==========================================
+        function createBlockWrapper(type = 'p', text = '') {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'block-wrapper';
+            wrapper.draggable = true;
 
-                    // FUNGSI SIMPAN: Convert block Frizk menjadi Clean HTML ke hidden input
-                    form.addEventListener('submit', () => {
-                        let cleanHTML = '';
-                        editor.querySelectorAll('.frizk-block').forEach(block => {
-                            const type = block.dataset.type;
-                            const text = block.innerHTML.trim(); // ambil format bold/italic bawaan contenteditable
-                            if (text !== '' && text !== '<br>') {
-                                if (type === 'p') cleanHTML += `<p>${text}</p>`;
-                                if (type === 'h1') cleanHTML += `<h1>${text}</h1>`;
-                                if (type === 'h2') cleanHTML += `<h2>${text}</h2>`;
-                                if (type === 'quote') cleanHTML += `<blockquote>${text}</blockquote>`;
-                            }
-                        });
-                        hiddenInput.value = cleanHTML;
-                    });
+            const handle = document.createElement('div');
+            handle.className = 'drag-handle';
+            handle.title = "Tahan dan geser";
+            handle.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="2"/><circle cx="15" cy="5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="19" r="2"/><circle cx="15" cy="19" r="2"/></svg>';
 
-                    // Fokus ke editor saat container di klik (bagian kosong)
-                    editor.addEventListener('click', (e) => {
-                        if (e.target === editor) {
-                            const blocks = editor.querySelectorAll('.frizk-block');
-                            blocks[blocks.length - 1].focus();
-                        }
-                    });
-                });
-            </script>
+            const block = document.createElement('div');
+            block.contentEditable = true;
+            block.className = 'frizk-block';
+            block.dataset.type = type;
+            block.dataset.placeholder = type === 'p' ? "Ketik teks atau seret elemen ke sini..." : `${type.toUpperCase()}...`;
+            block.innerHTML = text;
 
-            <%- include('../../partials/footer.ejs') %>
+            wrapper.appendChild(handle);
+            wrapper.appendChild(block);
+            
+            addDragEventsToWrapper(wrapper);
+            return wrapper;
+        }
+
+        // Untuk fitur klik widget langsung tambah (Opsional pendamping drag)
+        function addBlockClick(type) {
+            const newWrapper = createBlockWrapper(type);
+            editor.appendChild(newWrapper);
+            newWrapper.querySelector('.frizk-block').focus();
+            newWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+
+        // ==========================================
+        //  LOGIKA DRAG & DROP (INTI ELEMENTOR)
+        // ==========================================
+
+        // 1. Seret dari Panel Widget
+        document.querySelectorAll('.widget-box').forEach(widget => {
+            widget.addEventListener('dragstart', (e) => {
+                isWidgetDrag = true;
+                widgetType = widget.dataset.action;
+                e.dataTransfer.effectAllowed = 'copy';
+            });
+            widget.addEventListener('dragend', () => {
+                isWidgetDrag = false;
+                dropIndicator.style.display = 'none';
+            });
+        });
+
+        // 2. Seret blok yang sudah ada di kanvas
+        function addDragEventsToWrapper(wrapper) {
+            wrapper.addEventListener('dragstart', (e) => {
+                isWidgetDrag = false;
+                draggedElement = wrapper;
+                setTimeout(() => wrapper.classList.add('dragging'), 0);
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            wrapper.addEventListener('dragend', () => {
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+                dropIndicator.style.display = 'none';
+            });
+        }
+        
+        // Inisialisasi blok pertama
+        document.querySelectorAll('.block-wrapper').forEach(addDragEventsToWrapper);
+
+        // 3. Area Jatuh (Dropzone) Kanvas
+        editor.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Wajib agar mengizinkan drop
+            const afterElement = getDragAfterElement(editor, e.clientY);
+            
+            // Tampilkan garis indikator biru
+            dropIndicator.style.display = 'block';
+            if (afterElement == null) {
+                editor.appendChild(dropIndicator);
+            } else {
+                editor.insertBefore(dropIndicator, afterElement);
+            }
+        });
+
+        editor.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropIndicator.style.display = 'none';
+            
+            const afterElement = getDragAfterElement(editor, e.clientY);
+
+            if (isWidgetDrag && widgetType) {
+                // Drop elemen baru dari panel kiri
+                const newWrapper = createBlockWrapper(widgetType);
+                if (afterElement == null) {
+                    editor.appendChild(newWrapper);
+                } else {
+                    editor.insertBefore(newWrapper, afterElement);
+                }
+                newWrapper.querySelector('.frizk-block').focus();
+            } else if (draggedElement) {
+                // Pindah posisi elemen yang sudah ada
+                if (afterElement == null) {
+                    editor.appendChild(draggedElement);
+                } else {
+                    editor.insertBefore(draggedElement, afterElement);
+                }
+            }
+        });
+
+        // Menghitung kursor berada di atas/bawah blok mana
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.block-wrapper:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // ==========================================
+        //  LOGIKA KEYBOARD (Enter / Backspace)
+        // ==========================================
+        editor.addEventListener('keydown', (e) => {
+            const block = e.target;
+            if (!block.classList.contains('frizk-block')) return;
+            const wrapper = block.parentElement;
+
+            // ENTER
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const newWrapper = createBlockWrapper('p');
+                wrapper.parentNode.insertBefore(newWrapper, wrapper.nextSibling);
+                newWrapper.querySelector('.frizk-block').focus();
+            }
+
+            // BACKSPACE
+            if (e.key === 'Backspace' && block.textContent === '') {
+                e.preventDefault();
+                const prevWrapper = wrapper.previousElementSibling;
+                if (prevWrapper && prevWrapper.classList.contains('block-wrapper')) {
+                    wrapper.remove();
+                    const prevBlock = prevWrapper.querySelector('.frizk-block');
+                    
+                    const range = document.createRange();
+                    const sel = window.getSelection();
+                    range.selectNodeContents(prevBlock);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    prevBlock.focus();
+                }
+            }
+        });
+
+        // ==========================================
+        //  KIRIM DATA KE DATABASE
+        // ==========================================
+        form.addEventListener('submit', () => {
+            let cleanHTML = '';
+            editor.querySelectorAll('.frizk-block').forEach(block => {
+                const type = block.dataset.type;
+                const text = block.innerHTML.trim();
+                if (text !== '' && text !== '<br>') {
+                    if (type === 'p') cleanHTML += `<p>${text}</p>`;
+                    if (type === 'h1') cleanHTML += `<h1>${text}</h1>`;
+                    if (type === 'h2') cleanHTML += `<h2>${text}</h2>`;
+                    if (type === 'quote') cleanHTML += `<blockquote>${text}</blockquote>`;
+                }
+            });
+            hiddenInput.value = cleanHTML;
+        });
+
+        // Klik kertas kosong fokus ke blok paling bawah
+        document.querySelector('.canvas-paper').addEventListener('click', (e) => {
+            if (e.target.classList.contains('canvas-paper')) {
+                const blocks = editor.querySelectorAll('.frizk-block');
+                if(blocks.length > 0) blocks[blocks.length - 1].focus();
+            }
+        });
+    </script>
+</body>
+</html>
